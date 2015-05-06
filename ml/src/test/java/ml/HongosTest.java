@@ -18,37 +18,32 @@ import ml.service.HongoEvaluationService;
  */
 public class HongosTest {
 
+	
+	
 
-//    objetivo <-function(elemento){
-//        #venenoso: si / no
-//    }
-//    
-//    # de esa DB una buena practica es dividir los ya evaluados en
-//    hongosDB <- loadHongosAnalizados()
-//    # - datos de prueba
-//    # - datos de entrenamiento  
-//    
-//    hongosDB
-//
+	/**
+	 * random DB  de muestras sin analizar
+	 * @return
+	 */
+	private List<Hongo> randomDBSinAnalisis(int cant) {
+		ArrayList<Hongo> result = new ArrayList<Hongo>();
+		for (int i = 0; i < cant; i++) {
+			result.add(HongoEvaluationService.randomHongo());
+		}
+		return result;
+	}
+	
 	
 	/**
-	 * random DB sin categorizar
+	 * random DB  de muestras evaluadas
 	 * @return
 	 */
 	private List<HongoEvaluated> randomDB(int cant) {
 		ArrayList<HongoEvaluated> result = new ArrayList<HongoEvaluated>();
 		for (int i = 0; i < cant; i++) {
-			result.add(randomizarHongo());
+			result.add(HongoEvaluationService.randomEvaluation());
 		}
-		
 		return result;
-	}
-	
-	private HongoEvaluated randomizarHongo() {
-		//randomu 
-//		Random rand = new Random();
-//		rand.
-		return null;
 	}
 
 	/**
