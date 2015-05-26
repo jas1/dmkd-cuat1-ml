@@ -1,4 +1,4 @@
-package ml;
+package ml.tp1;
 
 import java.io.BufferedWriter;
 import java.io.File;
