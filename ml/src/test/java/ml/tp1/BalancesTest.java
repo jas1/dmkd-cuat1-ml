@@ -93,17 +93,18 @@ public class BalancesTest {
 
 	@Test
 	public void testBalancesArff() {
-		final String path = "C:/dev/R/workingdirs/dmkd_ml_ssn_balances/";
-		final String inputFile = "2015-1_enclosed-test.txt";
-		final String outputFile = "dummy-test.arff";
-		final String outputFile2 = "2015-1_enclosed-test2.arff";
+//		final String path = "C:/dev/R/workingdirs/dmkd_ml_ssn_balances/";
+		final String path =	"C:/julio/dev/R/";
+		final String inputFile = "20150526_0501_2013_y_2014-refined.txt";
+		final String outputFile = "mocoNofuncional.arff";
+		final String outputFile2 = "20150526_0501_2013_y_2014-refined.arff";
 		
-		final String inputFile2 = "2015-1_enclosed-train.txt";
-		final String outputFile22 = "dummy-train.arff";
-		final String outputFile222 = "2015-1_enclosed-train.arff";
+//		final String inputFile2 = "2015-1_enclosed-train.txt";
+//		final String outputFile22 = "dummy-train.arff";
+//		final String outputFile222 = "2015-1_enclosed-train.arff";
 
 		armarArff(path, inputFile, outputFile, outputFile2);
-		armarArff(path, inputFile2, outputFile22, outputFile222);
+//		armarArff(path, inputFile2, outputFile22, outputFile222);
 
 	}
 
@@ -117,7 +118,7 @@ public class BalancesTest {
 		try {
 			loader.setSource(new File(path+inputFile));
 			Instances data = loader.getDataSet();
-
+			
 			// save ARFF
 			ArffSaver saver = new ArffSaver();
 			saver.setInstances(data);
@@ -251,7 +252,39 @@ public class BalancesTest {
 		
 
 	}
-	
+
+	private void armaTodosvGoogleRefine(Table table, StringBuilder builder, Row row) {
+		for (Column col : table.getColumns()) {
+			// si es el campo numerico
+			if (col.getType() == DataType.DOUBLE) {
+
+				BigDecimal big = new BigDecimal((Double) row.get(col
+						.getName()));
+
+				builder.append(big.toPlainString()).append(TAB);
+			} else {
+				// si es id padre, que esta cargado como texto , que no
+				// deberia.
+				if (col.getName().equals("id_padre")) {
+					String lTmp = (String) row.get(col.getName());
+					if (lTmp == null) {
+						lTmp = "0";
+					}
+					builder.append(lTmp).append(TAB);
+				} else {
+					// si es numerico.
+					if (col.getType() == DataType.LONG
+							|| col.getType() == DataType.INT) {
+						builder.append(row.get(col.getName())).append(
+								TAB);
+					} else {
+						// resto del mundo
+						builder.append(row.get(col.getName())).append(TAB);
+					}
+				}
+			}
+		}
+	}
 
 	private void armaTodos(Table table, StringBuilder builder, Row row) {
 		for (Column col : table.getColumns()) {
