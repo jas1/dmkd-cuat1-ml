@@ -9,6 +9,14 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,6 +36,88 @@ public class BalancesTest {
 	private static final String TAB= "\t";
 	private static final String ENTER = "\n";
 	private static final String ENCODE = "UTF-8";
+	
+	@Test
+	public void armarTablaConPorcentajesYValores() {
+		final String TAB = "\t";
+		final String ENTER = "\n";
+		final String ENCODE = "UTF-8";
+		final String path = "C:/dev/R/workingdirs/dmkd_ml_ssn_balances/";
+		
+		try {
+			List<String> lineas =  Files.readAllLines(Paths.get(path+"20150526_0501_2013_y_2014-refined_v2.tsv"),StandardCharsets.UTF_8);
+			
+/*
+ * sacado de R
+periodo          sum
+1:  2013-1 135522923223
+2:  2013-2 161558394249
+3:  2013-3 122112079993
+4:  2013-4 149789281416
+5:  2014-1 184686226861
+6:  2014-2 218505460131
+7:  2014-3 157741416146
+8:  2014-4 191681292986
+ */
+			
+			
+			Map	<String,Long> map= new HashMap<String, Long>();
+			map.put("2013-1", 135522923223L);
+			map.put("2013-2", 161558394249L);
+			map.put("2013-3", 122112079993L);
+			map.put("2013-4", 149789281416L);
+			map.put("2014-1", 184686226861L);
+			map.put("2014-2", 218505460131L);
+			map.put("2014-3", 157741416146L);
+			map.put("2014-4", 191681292986L);
+			
+			List<String> lineasNuevas = new ArrayList<String>();
+			int count = 0;
+			StringBuilder lBuild = new StringBuilder();
+			for (String linea : lineas) {
+				String[] splited = linea.split(TAB);
+				if (count==0) {
+					lineasNuevas.add(linea+TAB+"'pesoEnPerido'"+TAB+"'porcentajeEnPerido'"+ENTER);
+					lBuild.append(linea+TAB+"'pesoEnPerido'"+TAB+"'porcentajeEnPerido'"+ENTER);
+				}else{
+					Long viejo = Long.parseLong(splited[15].replace("'", ""));
+					Long tmpTotal  = map.get(splited[11].replace("'", ""));
+					
+//					float tempTotal = viejo / tmpTotal ;
+//					float porcentaje = tempTotal *100;
+//					lineasNuevas.add(linea+TAB+"'"+tempTotal+"'"+TAB+"'"+porcentaje+"'"+ENTER);
+					
+//					total > 100
+//					val > x
+//					val*100/total
+							
+					BigDecimal valorCalculado= BigDecimal.valueOf(viejo).divide(BigDecimal.valueOf(tmpTotal),5,RoundingMode.HALF_EVEN);
+					BigDecimal porcentaje = valorCalculado.multiply(BigDecimal.valueOf(100));
+					lineasNuevas.add(linea+TAB+"'"+valorCalculado.toPlainString()+"'"+TAB+"'"+porcentaje.toPlainString()+"'"+ENTER);
+					lBuild.append(linea+TAB+"'"+valorCalculado.toPlainString()+"'"+TAB+"'"+porcentaje.toPlainString()+"'"+ENTER);
+					
+
+					
+				}
+				
+
+
+				count++;
+			}
+			
+			
+			Writer writer = null;
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(path + "ASDADS.txt"), ENCODE));
+			writer.write(lBuild.toString());
+			
+			//System.out.println(lineasNuevas);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	@Test
 	public void testBalances() {
