@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
@@ -15,7 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.healthmarketscience.jackcess.Column;
-import com.healthmarketscience.jackcess.DataType;
+import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
@@ -27,16 +26,20 @@ public class AccessHelperTest {
 		final String TAB = "\t";
 		final String ENTER = "\n";
 		final String ENCODE = "UTF-8";
-		final String path = "C:/Users/Julio Spairani/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_1_data_mining/TP1/";
+		final String path = "C:/Users/jspairani/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_1_data_mining/TP1/";
 		
 		Writer writer = null;
 		try {
 
 			String nombreMdb = "20150511_BaseTP.accdb";
-			Set<String> nombres = DatabaseBuilder.open(new File(path + nombreMdb)).getTableNames();
+			
+			Database db = DatabaseBuilder.open(new File(path + nombreMdb));
+			
+			Set<String> nombres = db.getTableNames();
+			
 			for (String nombre : nombres) {
 //				System.out.println(nombre);
-				Table table = DatabaseBuilder.open(new File(path + nombreMdb)).getTable(nombre);
+				Table table = db.getTable(nombre);
 				
 				StringBuilder lBuild = new StringBuilder();
 				for (Column col : table.getColumns()) {
