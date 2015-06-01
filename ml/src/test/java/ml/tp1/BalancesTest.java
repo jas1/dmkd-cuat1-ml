@@ -180,6 +180,10 @@ periodo          sum
 		}
 
 	}
+	
+	public void cambiarColumnasArff(){
+		
+	}
 
 	@Test
 	public void testBalancesArff() {
