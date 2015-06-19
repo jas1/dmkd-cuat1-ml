@@ -1,12 +1,9 @@
 package ar.com.juliospa.edu.dmkd.cuat1.dm;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,20 +16,114 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import weka.core.Instances;
-import weka.core.converters.ArffSaver;
-import weka.core.converters.CSVLoader;
-import weka.filters.unsupervised.attribute.NumericToNominal;
 
 public class TP1Helper {
 
 	// con <- dbConnect(RMySQL::MySQL(), dbname = "dm-tp1", password
 	// ='dmkd',user = 'dmkd',host='192.168.1.113')
 
+	
+	@Test
+	public void correrOrientadoAVentasProdDescGen() throws SQLException {
+
+		System.out
+				.println("-------- MySQL JDBC Connection Testing ------------");
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println("Where is your MySQL JDBC Driver?");
+			e.printStackTrace();
+			return;
+		}
+
+		System.out.println("MySQL JDBC Driver Registered!");
+		Connection connection = null;
+
+		try {
+			connection = DriverManager.getConnection(
+					"jdbc:mysql://192.168.1.113:3306/dm-tp1", "dmkd", "dmkd");
+
+		} catch (SQLException e) {
+			System.out.println("Connection Failed! Check output console");
+			e.printStackTrace();
+			return;
+		}
+
+		if (connection != null) {
+			// System.out.println("You made it, take control your database now!");
+
+			String detalladoAIds = "Select Venta_ID,Prod_ID FROM TP_Ventas_Prod order by Venta_ID";
+			String acotadoADesc = "Select VP.Venta_ID, P.DescGen FROM TP_Ventas_Prod VP inner JOIN TP_Productos  P ON VP.Prod_ID = P.Prod_ID";
+			
+			// armar itemsets
+			PreparedStatement preparedStatement = connection.prepareStatement(acotadoADesc);
+			
+			String colsDetalladoAIds = "Select Prod_ID FROM TP_Productos order by Prod_ID";
+			String colsAcotadoADesc = "select P.DescGen  from TP_Productos P  Group by P.DescGen ";
+			// armo las columnas
+			PreparedStatement preparedStatementProductos = connection.prepareStatement(colsAcotadoADesc);
+
+			// Result set get the result of the SQL query
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
+			ResultSet resultSet2 = preparedStatementProductos.executeQuery();
+			
+//			Map<String,Integer>  mapaProdsDefaultVacio = armaMapaDefaultVacio(resultSet2);
+			Map<String,Integer>  mapaProdsDefaultVacio = armaMapaDefaultVacioAcotado(resultSet2);
+			
+//			 arma itemsets
+//			Map<String, List<String>> mapa = armaItemsets(resultSet);
+			
+			Map<String, List<String>> mapa = armaItemsetsAcotado(resultSet);
+
+			
+			Map<String,  Map<String,Integer>> mapaApriori = armaItemsetsParaApriori( mapa,mapaProdsDefaultVacio);
+			
+//			muestraItemsets(mapa);
+			
+			String tmpResult = muestraItemsetsAprioriLogical(mapaApriori,mapaProdsDefaultVacio);
+			String tmpResultWeka = muestraItemsetsAprioriWekaLogical(mapaApriori,mapaProdsDefaultVacio);
+			
+			
+//			System.out.println(tmpResult);
+			
+			
+			// escribir a archivo
+			final String ENCODE = "UTF-8";
+			final String path = "C:/dev/20150615_dm/";
+			
+            Date defaultDate = new Date();
+            
+            // formato fecha anio, mes , dia, hora , minuto, segundo,
+            // esto lo agregue para tener multiples corridas que no pisen los archivos
+            String defaulFormat = "yyyyMMdd_HHmmss_";
+
+            // esto es un formateador de fechas, para que lo muestre de fecha a formato de 'palabras''
+            SimpleDateFormat lSDF = new SimpleDateFormat(defaulFormat);
+            // esto da la fecha formateada
+            String fechaAlMomento = lSDF.format(defaultDate);
+
+            // armo donde va a guardar el archivo siendo:
+            // carpeta pathDatos, y nombre de archivo compuesto por fechaAlMomento mas exportResult
+            String result = path + fechaAlMomento    + "_dm_itemset_ventas_prod_desc.txt";
+            String result2 = path + fechaAlMomento    + "_dm_itemset_weka_ventas_prod_desc.csv";
+            
+			writeToFile(tmpResult, ENCODE, result);
+			writeToFile(tmpResultWeka, ENCODE, result2);
+			
+			armarWekaFile(result2);
+			
+		} else {
+			System.out.println("Failed to make connection!");
+		}
+
+	}
+	
 	@Test
 	public void testConeccion() throws SQLException {
 
@@ -74,7 +165,7 @@ public class TP1Helper {
 			"inner JOIN TP_Ventas V ON VP.Venta_ID = V.Venta_ID ";
 			
 			// armar itemsets
-			PreparedStatement preparedStatement = connection.prepareStatement(acotadoADesc);
+			PreparedStatement preparedStatement = connection.prepareStatement(acotadoACliente);
 			
 			String colsDetalladoAIds = "Select Prod_ID FROM TP_Productos order by Prod_ID";
 			String colsAcotadoADesc = "select P.DescGen  from TP_Productos P  Group by P.DescGen ";
@@ -373,9 +464,12 @@ public class TP1Helper {
 		//separa header
 		build.append(ENTER);
 		
+		
+		Random random = new Random();
 		// recorro los itemset
 		for (String key : mapa.keySet()) {
-			build.append(key).append(TAB);
+//			build.append(key).append(TAB);
+			build.append(random.nextInt(10)).append(TAB);
 			
 			Map<String,Integer> currentSet = mapa.get(key);
 			for (String itemValue : currentSet.keySet()) {
@@ -455,13 +549,35 @@ public class TP1Helper {
 	}
 
 	
-	private Map<String, List<String>> armaItemsetsAcotado(ResultSet resultSet) throws SQLException {
+	private Map<String, List<String>> armaItemsetsAcotadoClientes(ResultSet resultSet) throws SQLException {
 		
 		Map<String, List<String>> mapa = new HashMap<String, List<String>>();
 		while (resultSet.next()) {
 			
 //			String custKey = resultSet.getString("Venta_ID");
 			String custKey = resultSet.getString("CLI_ID");
+			
+			// obtengo el itemset by key
+			List<String> currentList = mapa.get(custKey);
+			// si es null inicio
+			if (currentList == null ) {
+				currentList = new ArrayList<String>();
+			}
+//			agrego el item al itemset
+			currentList.add(resultSet.getString("DescGen"));
+			
+			// guardo el itemset
+			mapa.put(custKey, currentList);
+
+		}
+		return mapa;
+	}
+	private Map<String, List<String>> armaItemsetsAcotado(ResultSet resultSet) throws SQLException {
+		
+		Map<String, List<String>> mapa = new HashMap<String, List<String>>();
+		while (resultSet.next()) {
+			
+			String custKey = resultSet.getString("Venta_ID");
 			
 			// obtengo el itemset by key
 			List<String> currentList = mapa.get(custKey);
