@@ -1,4 +1,4 @@
-package ar.com.juliospa.edu.dmkd.cuat1.dm;
+package ar.com.juliospa.edu.dmkd.cuat1.dm.tp1;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
