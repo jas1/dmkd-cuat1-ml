@@ -21,6 +21,25 @@ public class Regla {
 		//1 {BTP4S79-75RC} => {BTP4S79-75BLC} 0.02417417  0.8341969 29.39551
 		//2 {BTP4S79-75SC} => {BTP4S79-75RC}  0.02147147  0.8411765 29.02713
 		//3 {BTP4S79-75SC} => {BTP4S79-75BLC} 0.02042042  0.8000000 28.19048
+		
+		// nueva linea
+		//9	{BOLSA DE DORMIR GRAVITY - 230 x 80 x 55,LUZ QUÍMICA AMARILLA VERDOSA} => {ANTIPARRAS PARA NIEVE}	0.0303030303030303	1	33
+		
+		String[] lineaSplit = linea.split("\t");
+		id = lineaSplit[0];
+		support = lineaSplit[2];
+		confidence = lineaSplit[3];
+		lift = lineaSplit[4];
+		
+		lhs = lineaSplit[1].substring(lineaSplit[1].indexOf("{")+1,lineaSplit[1].indexOf("}"));
+		rhs = lineaSplit[1].substring(lineaSplit[1].lastIndexOf("{")+1,lineaSplit[1].lastIndexOf("}"));
+		
+	}
+
+	/**
+	 * @param linea
+	 */
+	private void parseViejo(String linea) {
 		id = linea.substring(0,linea.indexOf(" "));
 		lhs = linea.substring(linea.indexOf("{")+1,linea.indexOf("}"));
 		rhs = linea.substring(linea.lastIndexOf("{")+1,linea.lastIndexOf("}"));

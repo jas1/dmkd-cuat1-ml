@@ -2,10 +2,11 @@ package ar.com.juliospa.edu.dmkd.cuat1.dm.tp1;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
@@ -32,13 +33,15 @@ import org.junit.Test;
  */
 public class TP1RuleInterpreterHelper {
 
+	final String ENCODE = "UTF-8";
+	
 	// con <- dbConnect(RMySQL::MySQL(), dbname = "dm-tp1", password
 	// ='dmkd',user = 'dmkd',host='192.168.1.113')
 
 	private StringBuilder leerReglasFile(String filePath) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		
-	    BufferedReader br = new BufferedReader(new FileReader(filePath)); 
+	    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), "Cp1252")); 
 		
 	    try {
 	        String line = br.readLine();
@@ -361,6 +364,12 @@ public class TP1RuleInterpreterHelper {
 	
 	
 	private List<Regla> parseReglas(StringBuilder build) throws IOException {
+		List<Regla> reglas = parseReglasPorReglon(build);
+
+		return reglas;
+	}
+	
+	private List<Regla> parseReglasOld(StringBuilder build) throws IOException {
 
 		// el problema es que no siempre vienen en 1 regla por reglon en ese
 		// caso como hacemos ?
@@ -464,10 +473,19 @@ public class TP1RuleInterpreterHelper {
 		List<Regla> reglas = parseReglas(build);
 
 		StringBuilder buildForFile = new StringBuilder();
-		for (Regla regla : reglas) {
-			buildForFile.append("\n\n#"+ regla.tipoExcel()).append("\n");
-			buildForFile.append(consultaProductoPorDescGenEnDB(regla.getAllIds()));
+		Connection con = getConnection();
+		try {
+			for (Regla regla : reglas) {
+				buildForFile.append("\n\n#"+ regla.tipoExcel()).append("\n");
+				buildForFile.append(consultaProductoPorDescGenEnDB(regla.getAllIds(), con));
+			}
+		} catch (Exception e) {
+			if (con!=null) {
+				con.close();
+			}
 		}
+		
+		
 		final String nombreArchivo = "_dm_rules_filter_buscarSegunDescGenProducto.txt";
 		writeOutput(buildForFile,nombreArchivo);
 		
@@ -505,6 +523,48 @@ public class TP1RuleInterpreterHelper {
 		final String nombreArchivo = "_dm_rules_filter_buscarSegunSubCategoriaProducto.txt";
 		writeOutput(buildForFile,nombreArchivo);
 	}
+	
+	
+	@Test
+	public void buscarSegunDescGenProductoPorMes() throws Exception {
+		System.out.println("Ejecutando:");
+		
+		String nameDir = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_1_data_mining/TP1/analisis";
+		
+		File directorio  = new File(nameDir);
+		File[] archivos =  directorio.listFiles();
+		Connection con = getConnection();
+		try {
+			for (File file : archivos) {
+				if (file.getName().endsWith("_result.txt")) {
+//				System.out.println(file.getAbsolutePath());
+					StringBuilder build = leerReglasFile(file.getAbsolutePath());
+					List<Regla> reglas = parseReglas(build);
+
+					StringBuilder buildForFile = new StringBuilder();
+					for (Regla regla : reglas) {
+						buildForFile.append("\n\n#"+ regla.tipoExcel()).append("\n");
+						buildForFile.append(consultaProductoPorDescGenEnDB(regla.getAllIds(), con));
+					}
+					
+					final String nombreArchivo = file.getAbsolutePath().replace("_result.txt", "_reglas_y_productos.txt");
+					//writeOutput(buildForFile,nombreArchivo);
+					writeToFile(buildForFile.toString(),ENCODE,nombreArchivo);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (con!=null) {
+				con.close();
+			}
+		}
+		
+		 /*
+
+		*/
+	}
+	
+	
 	
 	@Test
 	public void buscarSegunClienteProducto() throws Exception {
@@ -609,10 +669,8 @@ public class TP1RuleInterpreterHelper {
 	}
 
 	
-	public String consultaProductoPorDescGenEnDB(Set<String> idsProducto)
+	public String consultaProductoPorDescGenEnDB(Set<String> idsProducto, Connection con)
 			throws Exception {
-
-		Connection con = getConnection();
 
 		String sql = "SELECT * from Prod_Planos P where P.DescGen IN(?)";
 
@@ -738,7 +796,7 @@ private void writeToFile(String stringToWrite, final String encoding,String path
  * @param buildForFile
  */
 private void writeOutput(StringBuilder buildForFile,String nombreArchivo) {
-	final String ENCODE = "UTF-8";
+	
 	final String path = "C:/dev/20150615_dm/";
 	
 	 Date defaultDate = new Date();
