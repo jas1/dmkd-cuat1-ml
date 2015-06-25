@@ -15,6 +15,98 @@ import org.junit.Test;
 
 public class GeneradorRScript {
 
+	
+	@Test
+	public void recopilarResultadosClientesMonto() throws Exception{
+		String leerDesde = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_1_data_mining/TP1/analisis_monto_clientes/";
+		File dirResultados = new File(leerDesde);
+		File[] results = dirResultados.listFiles();
+		
+//		 la idea es a las reglas agergarle al final columa: periodo , y region, support de prueba y confidence de prueba y acumular todos los archivos en 1 solo
+		StringBuilder build = new StringBuilder();
+		for (File file : results) {
+			if (file.getName().endsWith("_result.txt")) {
+				analizarArchivoMonto(file,build);
+			}
+		}
+		
+		String output = leerDesde + "totalizadorClientesMonto.csv";
+		
+		writeToFile(build.toString(), ENCODE, output);
+	}	
+	
+	private void analizarArchivoMonto(File file, StringBuilder build) throws Exception {
+	    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "Cp1252")); 
+//	    dmkd_dm_tp1_tx_venta_desgen_monto_ventas_alto_sup_0-0045_conf_0-9
+	    
+	    String strTmp = file.getName().substring(file.getName().indexOf("desgen_monto_ventas_")+20,file.getName().indexOf("_result"));
+	    String confianza = strTmp.substring(strTmp.indexOf("conf_")+5).replace("-", ".");
+	    String support = strTmp.substring(strTmp.indexOf("sup_")+4,strTmp.indexOf("_conf")).replace("-", ".");;
+	    String cantidadVentas = strTmp.substring(0,strTmp.indexOf("_"));
+	    try {
+	        String line = br.readLine();
+
+	        while (line != null) {
+//	        	10	{3 STREAMERS_12,5 NINFAS SECAS_12} => {4 NINFAS SECAS_12}	0.0012012012012012	1	555
+//	        	String sacadorTipoCliente = line.substring(line.indexOf("_")+1,line.indexOf(","));
+	        	build.append(line).append("\t").append(cantidadVentas).append("\t").append(confianza).append("\t").append(support);
+	        	build.append(System.lineSeparator());
+	            line = br.readLine();
+	        }
+	    } finally {
+	        br.close();
+	    }
+	}
+	
+	@Test
+	public void asd() {
+		String asd = "desgen_monto_ventas_";
+		System.out.println(asd.length());
+	}
+	
+	@Test
+	public void recopilarResultadosClientes() throws Exception{
+		String leerDesde = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_1_data_mining/TP1/analisis_cantidad_monto_clientes/";
+		File dirResultados = new File(leerDesde);
+		File[] results = dirResultados.listFiles();
+		
+//		 la idea es a las reglas agergarle al final columa: periodo , y region, support de prueba y confidence de prueba y acumular todos los archivos en 1 solo
+		StringBuilder build = new StringBuilder();
+		for (File file : results) {
+			if (file.getName().endsWith("_result.txt")) {
+				analizarArchivoPeriodosCantidad(file,build);
+			}
+		}
+		
+		String output = leerDesde + "totalizadorAnalisisRegionesMes.csv";
+		
+		writeToFile(build.toString(), ENCODE, output);
+	}	
+	
+	private void analizarArchivoPeriodosCantidad(File file, StringBuilder build) throws Exception {
+	    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "Cp1252")); 
+//	    dmkd_dm_tp1_tx_venta_desgen_cantidad_ventas_alto_sup_0-0025_conf_0-9_result
+	    
+	    String strTmp = file.getName().substring(file.getName().indexOf("desgen_cantidad_ventas_")+23,file.getName().indexOf("_result"));
+	    String confianza = strTmp.substring(strTmp.indexOf("conf_")+5).replace("-", ".");
+	    String support = strTmp.substring(strTmp.indexOf("sup_")+4,strTmp.indexOf("_conf")).replace("-", ".");;
+	    String cantidadVentas = strTmp.substring(0,strTmp.indexOf("_"));
+	    
+	    try {
+	        String line = br.readLine();
+
+	        while (line != null) {
+	        	build.append(line).append("\t").append(cantidadVentas).append("\t").append(confianza).append("\t").append(support);
+	        	build.append(System.lineSeparator());
+	            line = br.readLine();
+	        }
+	    } finally {
+	        br.close();
+	    }
+	}
+	
+	
+	
 	final String ENCODE = "UTF-8";
 	@Test
 	public void generadorCorridasBase(){
@@ -87,7 +179,7 @@ public class GeneradorRScript {
 		StringBuilder build = new StringBuilder();
 		for (File file : results) {
 			if (file.getName().endsWith("_result.txt")) {
-				analizarArchivo(file,build);
+				analizarArchivoPeriodosMensuales(file,build);
 			}
 		}
 		
@@ -98,8 +190,9 @@ public class GeneradorRScript {
 		
 	}
 	
+
 	
-	private void analizarArchivo(File file, StringBuilder build) throws Exception {
+	private void analizarArchivoPeriodosMensuales(File file, StringBuilder build) throws Exception {
 	    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "Cp1252")); 
 //	    desgen_201404_CapitalFederal_sup_0-015_conf_0-9
 	    
