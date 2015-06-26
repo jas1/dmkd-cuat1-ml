@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -58,9 +60,87 @@ public class GeneradorRScript {
 	    }
 	}
 	
+	
+	@Test
+	public void recopilarResultadosClientePeriodo() throws Exception{
+		String leerDesde = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_1_data_mining/TP1/analisis_cliente_mes_compara/";
+		File dirResultados = new File(leerDesde);
+		File[] results = dirResultados.listFiles();
+		
+//		 la idea es a las reglas agergarle al final columa: periodo , y region, support de prueba y confidence de prueba y acumular todos los archivos en 1 solo
+		
+		
+		// cuentas
+		Map<String, Long> archivoCantLineas = new HashMap<String, Long>();
+		for (File file : results) {
+			if (file.getName().startsWith("dmkd_dm_tp1_tx_venta_desgen_clientes_periodo_") && !file.getName().endsWith("_result.txt")) {
+				archivoCantLineas.put(file.getName(), analizarLineasArchivoClientePeriodo(file));
+			}
+		}
+		
+		
+		StringBuilder build = new StringBuilder();
+		for (File file : results) {
+			if (file.getName().endsWith("_result.txt")) {
+				analizarArchivoClientePeriodo(file, build,archivoCantLineas);
+			}
+		}
+		
+		String output = leerDesde + "totalizadorClientePeriodo.csv";
+		
+		writeToFile(build.toString(), ENCODE, output);
+	}
+	
+	private long analizarLineasArchivoClientePeriodo(File file) throws Exception {
+	    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "Cp1252"));
+	    Long count = 0L;
+	    try {
+	        String line = br.readLine();
+	        
+	        while (line != null) {
+	        	if (!line.contains("Venta_ID") &&  line.trim().length() > 0) {
+	        		count++;	
+				}
+	        	
+	        	line = br.readLine();
+	        }
+	    } finally {
+	        br.close();
+	    }
+	    return count;
+	}
+	
+	private void analizarArchivoClientePeriodo(File file, StringBuilder build, Map<String, Long> archivoCantLineas) throws Exception {
+	    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "Cp1252")); 
+//	    dmkd_dm_tp1_tx_venta_desgen_clientes_periodo_medio_201503_sup_0-045_conf_0-9.txt
+	    
+//	    get current : archivoCantLineas 
+	    Long currentLineas = archivoCantLineas.get(file.getName().replace("_result", ""));
+	    
+	    String strTmp = file.getName().substring(file.getName().indexOf("venta_desgen_clientes_periodo_")+30,file.getName().indexOf("_result"));
+	    String confianza = strTmp.substring(strTmp.indexOf("conf_")+5).replace("-", ".");
+	    String support = strTmp.substring(strTmp.indexOf("sup_")+4,strTmp.indexOf("_conf")).replace("-", ".");;
+	    String cantidadVentas = strTmp.substring(0,strTmp.indexOf("_"));
+	    String periodo = strTmp.substring(strTmp.indexOf("_")+1,strTmp.indexOf("_")+7);
+	    try {
+	        String line = br.readLine();
+
+	        while (line != null) {
+//	        	10	{3 STREAMERS_12,5 NINFAS SECAS_12} => {4 NINFAS SECAS_12}	0.0012012012012012	1	555 y le agrego la cantidad de lienas actual
+//	        	String sacadorTipoCliente = line.substring(line.indexOf("_")+1,line.indexOf(","));
+	        	build.append(line).append("\t").append(cantidadVentas).append("\t").append(confianza).append("\t").append(support).append("\t").append(currentLineas).append("\t").append(periodo);
+	        	build.append(System.lineSeparator());
+	            line = br.readLine();
+	        }
+	    } finally {
+	        br.close();
+	    }
+	}
+	
+	
 	@Test
 	public void asd() {
-		String asd = "desgen_monto_ventas_";
+		String asd = "venta_desgen_clientes_periodo_";
 		System.out.println(asd.length());
 	}
 	
