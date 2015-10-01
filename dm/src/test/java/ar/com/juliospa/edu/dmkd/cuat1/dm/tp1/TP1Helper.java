@@ -35,23 +35,31 @@ public class TP1Helper {
 	// con <- dbConnect(RMySQL::MySQL(), dbname = "dm-tp1", password
 	// ='dmkd',user = 'dmkd',host='192.168.1.113')
 
-	
 	@Test
-	public void generarSQLS() throws SQLException{
-		
-//		select * from aux_reglas_punto_4_ocurrencias_items_2014 where region = 'Capital Federal' AND descgen= 'CAÑA TANDURA'
-//				AND venta_id in ( select venta_id from aux_reglas_punto_4_ocurrencias_items_2014 where region = 'Capital Federal' AND descgen= 'REEL AVENSIS FRENO DELANTERO' group by venta_id)
-//				group by venta_id
-//
-//				# todos: CAÑA TANDURA,REEL AVENSIS FRENO DELANTERO} => {REEL HONORIUS FRENO DELANTERO} : 3
-//				select * from aux_reglas_punto_4_ocurrencias_items_2014 where region = 'Capital Federal' AND descgen= 'REEL HONORIUS FRENO DELANTERO' 
-//				AND venta_id IN (
-//				select venta_id from aux_reglas_punto_4_ocurrencias_items_2014 where region = 'Capital Federal' AND descgen= 'CAÑA TANDURA'
-//				AND venta_id in ( select venta_id from aux_reglas_punto_4_ocurrencias_items_2014 where region = 'Capital Federal' AND descgen= 'REEL AVENSIS FRENO DELANTERO'  group by venta_id) 
-//				 group by venta_id
-//				) group by venta_id
-		
-		
+	public void generarSQLS() throws SQLException {
+
+		// select * from aux_reglas_punto_4_ocurrencias_items_2014 where region
+		// = 'Capital Federal' AND descgen= 'CAÑA TANDURA'
+		// AND venta_id in ( select venta_id from
+		// aux_reglas_punto_4_ocurrencias_items_2014 where region = 'Capital
+		// Federal' AND descgen= 'REEL AVENSIS FRENO DELANTERO' group by
+		// venta_id)
+		// group by venta_id
+		//
+		// # todos: CAÑA TANDURA,REEL AVENSIS FRENO DELANTERO} => {REEL HONORIUS
+		// FRENO DELANTERO} : 3
+		// select * from aux_reglas_punto_4_ocurrencias_items_2014 where region
+		// = 'Capital Federal' AND descgen= 'REEL HONORIUS FRENO DELANTERO'
+		// AND venta_id IN (
+		// select venta_id from aux_reglas_punto_4_ocurrencias_items_2014 where
+		// region = 'Capital Federal' AND descgen= 'CAÑA TANDURA'
+		// AND venta_id in ( select venta_id from
+		// aux_reglas_punto_4_ocurrencias_items_2014 where region = 'Capital
+		// Federal' AND descgen= 'REEL AVENSIS FRENO DELANTERO' group by
+		// venta_id)
+		// group by venta_id
+		// ) group by venta_id
+
 		String conStr = "jdbc:mysql://192.168.1.113:3306/dm-tp1";
 		String user = "dmkd";
 		String pwd = "dmkd";
@@ -60,49 +68,34 @@ public class TP1Helper {
 		List<String> tablas = null;
 		Connection con = getConnection(driverClassName, conStr, user, pwd);
 		// traeme todas las reglas
-		
+
 		String query = "select * from aux_reglas_punto_4_completas";
-		
 
 		// tengo las reglas por region
-		List<ReglasTodasDto> reglas = obtenerReglasTodasDeResultset(obtenerResultset( query, con));
-			
-		
+		List<ReglasTodasDto> reglas = obtenerReglasTodasDeResultset(obtenerResultset(query, con));
 
-		
 		armaqueries(reglas);
 		armaqueries2015(reglas);
-		
-		
+
 	}
-	
-	
-private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
+
+	private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		System.out.println("---------------------2015-------------------------");
 		String precRep = "${PRECEDENTE}";
 		String antec1Rep = "${ANTECEDENTE1}";
 		String antec2Rep = "${ANTECEDENTE2}";
-		String regionRep = "${REGION}";  
-		
-		String queryPrecedente =  "select * from aux_reglas_punto_4_ocurrencias_items_2015 where region = '"+regionRep+"' AND descgen= '"+antec2Rep+"' \n"+
-				"AND venta_id in ( select venta_id from aux_reglas_punto_4_ocurrencias_items_2015 where region = '"+regionRep+"' AND descgen= '"+antec1Rep+"' group by venta_id)  \n" +
-				"group by venta_id";
-		
-		
-//		# todos: CAÑA TANDURA,REEL AVENSIS FRENO DELANTERO} => {REEL HONORIUS FRENO DELANTERO} : 3
-		String queryTotal = "select * from aux_reglas_punto_4_ocurrencias_items_2015 where region = '"+regionRep+"' AND descgen= '"+precRep+"'  \n"+
-		"AND venta_id IN ("+
-		"select venta_id from aux_reglas_punto_4_ocurrencias_items_2015 where region = '"+regionRep+"' AND descgen= '"+antec2Rep+"'  \n"+
-		"AND venta_id in ( select venta_id from aux_reglas_punto_4_ocurrencias_items_2015 where region = '"+regionRep+"' AND descgen= '"+antec1Rep+"'  group by venta_id) \n"+ 
-		" group by venta_id"+
-		") group by venta_id";
-		
+		String regionRep = "${REGION}";
+
+		String queryPrecedente = "select * from aux_reglas_punto_4_ocurrencias_items_2015 where region = '" + regionRep + "' AND descgen= '" + antec2Rep + "' \n" + "AND venta_id in ( select venta_id from aux_reglas_punto_4_ocurrencias_items_2015 where region = '" + regionRep + "' AND descgen= '" + antec1Rep + "' group by venta_id)  \n" + "group by venta_id";
+
+		// # todos: CAÑA TANDURA,REEL AVENSIS FRENO DELANTERO} => {REEL HONORIUS
+		// FRENO DELANTERO} : 3
+		String queryTotal = "select * from aux_reglas_punto_4_ocurrencias_items_2015 where region = '" + regionRep + "' AND descgen= '" + precRep + "'  \n" + "AND venta_id IN (" + "select venta_id from aux_reglas_punto_4_ocurrencias_items_2015 where region = '" + regionRep + "' AND descgen= '" + antec2Rep + "'  \n" + "AND venta_id in ( select venta_id from aux_reglas_punto_4_ocurrencias_items_2015 where region = '" + regionRep + "' AND descgen= '" + antec1Rep + "'  group by venta_id) \n" + " group by venta_id" + ") group by venta_id";
+
 		for (ReglasTodasDto regla : reglasCapital) {
 			String reglaStr = regla.getRegla();
-			String antecedentesPre = reglaStr.substring(
-					reglaStr.indexOf("{") + 1, reglaStr.indexOf("}"));
-			String consecuentePre = reglaStr.substring(
-					reglaStr.lastIndexOf("{") + 1, reglaStr.lastIndexOf("}"));
+			String antecedentesPre = reglaStr.substring(reglaStr.indexOf("{") + 1, reglaStr.indexOf("}"));
+			String consecuentePre = reglaStr.substring(reglaStr.lastIndexOf("{") + 1, reglaStr.lastIndexOf("}"));
 
 			// # tengo los items de las reglas
 			String[] antecedentes = antecedentesPre.split(",");
@@ -110,51 +103,41 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 
 			String todosElementos = antecedentesPre + "," + consecuente;
 			String[] todosPre = todosElementos.split(",");
-			
-//			# necesario por hardcode
+
+			// # necesario por hardcode
 			if (todosPre.length == 3) {
-				System.out.println(System.lineSeparator()+"# precedente: " + reglaStr);
+				System.out.println(System.lineSeparator() + "# precedente: " + reglaStr);
 				System.out.println(queryPrecedente.replace(regionRep, regla.getRegion()).replace(antec1Rep, todosPre[0]).replace(antec2Rep, todosPre[1]));
-				
-				System.out.println(System.lineSeparator()+"# total " + reglaStr);
+
+				System.out.println(System.lineSeparator() + "# total " + reglaStr);
 				System.out.println(queryTotal.replace(regionRep, regla.getRegion()).replace(precRep, todosPre[2]).replace(antec1Rep, todosPre[0]).replace(antec2Rep, todosPre[1]));
 				System.out.println("");
 				System.out.println("");
-			}else{
-				System.out.println(System.lineSeparator()+"# FALTA:  " + reglaStr + " --> REGLA TIENE:  "+todosPre.length);
-				
+			} else {
+				System.out.println(System.lineSeparator() + "# FALTA:  " + reglaStr + " --> REGLA TIENE:  " + todosPre.length);
+
 			}
-			
+
 		}
 	}
-	
-	
+
 	private void armaqueries(List<ReglasTodasDto> reglasCapital) {
-		
+
 		String precRep = "${PRECEDENTE}";
 		String antec1Rep = "${ANTECEDENTE1}";
 		String antec2Rep = "${ANTECEDENTE2}";
-		String regionRep = "${REGION}";  
-		
-		String queryPrecedente =  "select * from aux_reglas_punto_4_ocurrencias_items_2014 where region = '"+regionRep+"' AND descgen= '"+antec2Rep+"'"+
-				"AND venta_id in ( select venta_id from aux_reglas_punto_4_ocurrencias_items_2014 where region = '"+regionRep+"' AND descgen= '"+antec1Rep+"' group by venta_id)" +
-				"group by venta_id";
-		
-		
-//		# todos: CAÑA TANDURA,REEL AVENSIS FRENO DELANTERO} => {REEL HONORIUS FRENO DELANTERO} : 3
-		String queryTotal = "select * from aux_reglas_punto_4_ocurrencias_items_2014 where region = '"+regionRep+"' AND descgen= '"+precRep+"' "+
-		"AND venta_id IN ("+
-		"select venta_id from aux_reglas_punto_4_ocurrencias_items_2014 where region = '"+regionRep+"' AND descgen= '"+antec2Rep+"'"+
-		"AND venta_id in ( select venta_id from aux_reglas_punto_4_ocurrencias_items_2014 where region = '"+regionRep+"' AND descgen= '"+antec1Rep+"'  group by venta_id)"+ 
-		" group by venta_id"+
-		") group by venta_id";
-		
+		String regionRep = "${REGION}";
+
+		String queryPrecedente = "select * from aux_reglas_punto_4_ocurrencias_items_2014 where region = '" + regionRep + "' AND descgen= '" + antec2Rep + "'" + "AND venta_id in ( select venta_id from aux_reglas_punto_4_ocurrencias_items_2014 where region = '" + regionRep + "' AND descgen= '" + antec1Rep + "' group by venta_id)" + "group by venta_id";
+
+		// # todos: CAÑA TANDURA,REEL AVENSIS FRENO DELANTERO} => {REEL HONORIUS
+		// FRENO DELANTERO} : 3
+		String queryTotal = "select * from aux_reglas_punto_4_ocurrencias_items_2014 where region = '" + regionRep + "' AND descgen= '" + precRep + "' " + "AND venta_id IN (" + "select venta_id from aux_reglas_punto_4_ocurrencias_items_2014 where region = '" + regionRep + "' AND descgen= '" + antec2Rep + "'" + "AND venta_id in ( select venta_id from aux_reglas_punto_4_ocurrencias_items_2014 where region = '" + regionRep + "' AND descgen= '" + antec1Rep + "'  group by venta_id)" + " group by venta_id" + ") group by venta_id";
+
 		for (ReglasTodasDto regla : reglasCapital) {
 			String reglaStr = regla.getRegla();
-			String antecedentesPre = reglaStr.substring(
-					reglaStr.indexOf("{") + 1, reglaStr.indexOf("}"));
-			String consecuentePre = reglaStr.substring(
-					reglaStr.lastIndexOf("{") + 1, reglaStr.lastIndexOf("}"));
+			String antecedentesPre = reglaStr.substring(reglaStr.indexOf("{") + 1, reglaStr.indexOf("}"));
+			String consecuentePre = reglaStr.substring(reglaStr.lastIndexOf("{") + 1, reglaStr.lastIndexOf("}"));
 
 			// # tengo los items de las reglas
 			String[] antecedentes = antecedentesPre.split(",");
@@ -162,27 +145,23 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 
 			String todosElementos = antecedentesPre + "," + consecuente;
 			String[] todosPre = todosElementos.split(",");
-			
-//			# necesario por hardcode
+
+			// # necesario por hardcode
 			if (todosPre.length == 3) {
-				System.out.println(System.lineSeparator()+"# precedente: " + reglaStr);
+				System.out.println(System.lineSeparator() + "# precedente: " + reglaStr);
 				System.out.println(queryPrecedente.replace(regionRep, regla.getRegion()).replace(antec1Rep, todosPre[0]).replace(antec2Rep, todosPre[1]));
-				
-				System.out.println(System.lineSeparator()+"# total " + reglaStr);
+
+				System.out.println(System.lineSeparator() + "# total " + reglaStr);
 				System.out.println(queryTotal.replace(regionRep, regla.getRegion()).replace(precRep, todosPre[2]).replace(antec1Rep, todosPre[0]).replace(antec2Rep, todosPre[1]));
 				System.out.println("");
 				System.out.println("");
-			}else{
-				System.out.println(System.lineSeparator()+"# FALTA:  " + reglaStr + " --> REGLA TIENE:  "+todosPre.length);
-				
+			} else {
+				System.out.println(System.lineSeparator() + "# FALTA:  " + reglaStr + " --> REGLA TIENE:  " + todosPre.length);
+
 			}
-			
+
 		}
 	}
-
-
-
-
 
 	@Test
 	public void consultaElementosRegla() throws Exception {
@@ -201,12 +180,9 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		String queryInterior = "select * from aux_reglas_punto_4_completas where region = 'Interior'";
 
 		// tengo las reglas por region
-		List<ReglasTodasDto> reglasCapital = obtenerReglasTodasDeResultset(obtenerResultset(
-				queryCapital, con));
-		List<ReglasTodasDto> reglasBA = obtenerReglasTodasDeResultset(obtenerResultset(
-				queryBA, con));
-		List<ReglasTodasDto> reglasInterior = obtenerReglasTodasDeResultset(obtenerResultset(
-				queryInterior, con));
+		List<ReglasTodasDto> reglasCapital = obtenerReglasTodasDeResultset(obtenerResultset(queryCapital, con));
+		List<ReglasTodasDto> reglasBA = obtenerReglasTodasDeResultset(obtenerResultset(queryBA, con));
+		List<ReglasTodasDto> reglasInterior = obtenerReglasTodasDeResultset(obtenerResultset(queryInterior, con));
 
 		// necesito los items por region para poder ver que las reglas validen
 		// en 2015
@@ -214,12 +190,9 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		String queryItems2015BA = "select * from aux_reglas_punto_4_ocurrencias_items_2015 where region = 'Buenos Aires'";
 		String queryItems2015Interior = "select * from aux_reglas_punto_4_ocurrencias_items_2015 where region = 'Interior'";
 
-		List<Items2015> itemsCapital = obtenerItems2015DeResultset(obtenerResultset(
-				queryItems2015Capital, con));
-		List<Items2015> itemsBA = obtenerItems2015DeResultset(obtenerResultset(
-				queryItems2015BA, con));
-		List<Items2015> itemsInterior = obtenerItems2015DeResultset(obtenerResultset(
-				queryItems2015Interior, con));
+		List<Items2015> itemsCapital = obtenerItems2015DeResultset(obtenerResultset(queryItems2015Capital, con));
+		List<Items2015> itemsBA = obtenerItems2015DeResultset(obtenerResultset(queryItems2015BA, con));
+		List<Items2015> itemsInterior = obtenerItems2015DeResultset(obtenerResultset(queryItems2015Interior, con));
 
 		Map<Integer, List<String>> txCapital = hacerMapaTx(itemsCapital);
 		Map<Integer, List<String>> txInterior = hacerMapaTx(itemsBA);
@@ -228,18 +201,15 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		// para cada regla tengo que buscar los itemsets dependiendo de donde
 		// sea la regla y sacar las nuevas medidas
 
-		List<ReglaEnTxDto> resultCapital2015 = validarReglas2015(reglasCapital,
-				txCapital, itemsCapital);
+		List<ReglaEnTxDto> resultCapital2015 = validarReglas2015(reglasCapital, txCapital, itemsCapital);
 		System.out.println("capital 2015");
 		System.out.println(showReglaEnTxDto(resultCapital2015));
 
 		// para validar valores
 		String queryItems2014Capital = "select * from aux_reglas_punto_4_ocurrencias_items_2014 where region = 'Capital Federal'";
-		List<Items2015> itemsCapital2014 = obtenerItems2015DeResultset(obtenerResultset(
-				queryItems2014Capital, con));
+		List<Items2015> itemsCapital2014 = obtenerItems2015DeResultset(obtenerResultset(queryItems2014Capital, con));
 		Map<Integer, List<String>> txCapital2014 = hacerMapaTx(itemsCapital);
-		List<ReglaEnTxDto> resultCapital2014 = validarReglas2015(reglasCapital,
-				txCapital2014, itemsCapital2014);
+		List<ReglaEnTxDto> resultCapital2014 = validarReglas2015(reglasCapital, txCapital2014, itemsCapital2014);
 		System.out.println("capital 2014");
 		System.out.println(showReglaEnTxDto(resultCapital2014));
 
@@ -248,32 +218,17 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 	private String showReglaEnTxDto(List<ReglaEnTxDto> resultCapital2014) {
 		StringBuilder build = new StringBuilder();
 		for (ReglaEnTxDto reglaEnTxDto : resultCapital2014) {
-			build.append(System.lineSeparator())
-					.append("---------------------------------------")
-					.append(System.lineSeparator());
-			build.append(System.lineSeparator())
-					.append(reglaEnTxDto.getRegla().show())
-					.append(System.lineSeparator());
-			build.append(System.lineSeparator()).append("resumen:")
-					.append(System.lineSeparator());
-			build.append(System.lineSeparator()).append("muestra size:")
-					.append(reglaEnTxDto.getSizeMuestra())
-					.append(System.lineSeparator());
-			build.append(System.lineSeparator()).append("support:")
-					.append(reglaEnTxDto.getSupport())
-					.append(System.lineSeparator());
-			build.append(System.lineSeparator()).append("confidence:")
-					.append(reglaEnTxDto.getConfidence())
-					.append(System.lineSeparator());
-			build.append(System.lineSeparator()).append("tx participantes:")
-					.append(reglaEnTxDto.getTxsIds().size())
-					.append(System.lineSeparator());
+			build.append(System.lineSeparator()).append("---------------------------------------").append(System.lineSeparator());
+			build.append(System.lineSeparator()).append(reglaEnTxDto.getRegla().show()).append(System.lineSeparator());
+			build.append(System.lineSeparator()).append("resumen:").append(System.lineSeparator());
+			build.append(System.lineSeparator()).append("muestra size:").append(reglaEnTxDto.getSizeMuestra()).append(System.lineSeparator());
+			build.append(System.lineSeparator()).append("support:").append(reglaEnTxDto.getSupport()).append(System.lineSeparator());
+			build.append(System.lineSeparator()).append("confidence:").append(reglaEnTxDto.getConfidence()).append(System.lineSeparator());
+			build.append(System.lineSeparator()).append("tx participantes:").append(reglaEnTxDto.getTxsIds().size()).append(System.lineSeparator());
 			for (Integer tx : reglaEnTxDto.getTxsIds()) {
 				build.append(tx).append(",");
 			}
-			build.append(System.lineSeparator()).append("tx antecedentes:")
-					.append(reglaEnTxDto.getTxsAntecedenteIds().size())
-					.append(System.lineSeparator());
+			build.append(System.lineSeparator()).append("tx antecedentes:").append(reglaEnTxDto.getTxsAntecedenteIds().size()).append(System.lineSeparator());
 			for (Integer tx : reglaEnTxDto.getTxsAntecedenteIds()) {
 				build.append(tx).append(",");
 			}
@@ -282,9 +237,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 
 	}
 
-	public List<ReglaEnTxDto> validarReglasV2(List<ReglasTodasDto> reglas,
-			Map<Integer, List<String>> tx, List<Items2015> items)
-			throws Exception {
+	public List<ReglaEnTxDto> validarReglasV2(List<ReglasTodasDto> reglas, Map<Integer, List<String>> tx, List<Items2015> items) throws Exception {
 
 		int cantTotalItemsParaMuestra = items.size();
 
@@ -295,10 +248,8 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		// # para cada regla, sacar los elementos que la constituyen
 		for (ReglasTodasDto regla : reglas) {
 			String reglaStr = regla.getRegla();
-			String antecedentesPre = reglaStr.substring(
-					reglaStr.indexOf("{") + 1, reglaStr.indexOf("}"));
-			String consecuentePre = reglaStr.substring(
-					reglaStr.lastIndexOf("{") + 1, reglaStr.lastIndexOf("}"));
+			String antecedentesPre = reglaStr.substring(reglaStr.indexOf("{") + 1, reglaStr.indexOf("}"));
+			String consecuentePre = reglaStr.substring(reglaStr.lastIndexOf("{") + 1, reglaStr.lastIndexOf("}"));
 
 			// # tengo los items de las reglas
 			String[] antecedentes = antecedentesPre.split(",");
@@ -368,19 +319,16 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 							contiene1 = true;
 							for (Integer l3 : lista3) {
 								if (l1 == l3) {
-									contiene2 = true;									
+									contiene2 = true;
 								}
 							}
 						}
 					}
 				}
-				
-				
+
 				if (contiene1 && contiene2) {
-					 
+
 				}
-				
-				
 
 			}
 
@@ -428,8 +376,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		return result;
 	}
 
-	public List<ReglaEnTxDto> validarReglas2015(List<ReglasTodasDto> reglas,
-			Map<Integer, List<String>> tx, List<Items2015> items) {
+	public List<ReglaEnTxDto> validarReglas2015(List<ReglasTodasDto> reglas, Map<Integer, List<String>> tx, List<Items2015> items) {
 
 		int cantTotalItemsParaMuestra = items.size();
 
@@ -441,10 +388,8 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		for (ReglasTodasDto regla : reglas) {
 
 			String reglaStr = regla.getRegla();
-			String antecedentesPre = reglaStr.substring(
-					reglaStr.indexOf("{") + 1, reglaStr.indexOf("}"));
-			String consecuentePre = reglaStr.substring(
-					reglaStr.lastIndexOf("{") + 1, reglaStr.lastIndexOf("}"));
+			String antecedentesPre = reglaStr.substring(reglaStr.indexOf("{") + 1, reglaStr.indexOf("}"));
+			String consecuentePre = reglaStr.substring(reglaStr.lastIndexOf("{") + 1, reglaStr.lastIndexOf("}"));
 
 			// # tengo los items de las reglas
 			String[] antecedentes = antecedentesPre.split(",");
@@ -551,8 +496,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		return resultado;
 	}
 
-	public List<Items2015> obtenerItems2015DeResultset(ResultSet resultSet)
-			throws SQLException {
+	public List<Items2015> obtenerItems2015DeResultset(ResultSet resultSet) throws SQLException {
 		List<Items2015> result = new ArrayList<Items2015>();
 
 		// cols: 'row_names',
@@ -572,8 +516,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		return result;
 	}
 
-	public List<ReglasTodasDto> obtenerReglasTodasDeResultset(
-			ResultSet resultSet) throws SQLException {
+	public List<ReglasTodasDto> obtenerReglasTodasDeResultset(ResultSet resultSet) throws SQLException {
 		List<ReglasTodasDto> result = new ArrayList<ReglasTodasDto>();
 
 		// cols: 'row_names',
@@ -590,24 +533,20 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 			double confidence = resultSet.getDouble("confidence");
 			double lift = resultSet.getDouble("lift");
 
-			ReglasTodasDto tmp = new ReglasTodasDto(id, region, idregla, regla,
-					support, confidence, lift);
+			ReglasTodasDto tmp = new ReglasTodasDto(id, region, idregla, regla, support, confidence, lift);
 			result.add(tmp);
 
 		}
 		return result;
 	}
 
-	public ResultSet obtenerResultset(String query, Connection con)
-			throws SQLException {
-		PreparedStatement preparedStatementProductos = con
-				.prepareStatement(query);
+	public ResultSet obtenerResultset(String query, Connection con) throws SQLException {
+		PreparedStatement preparedStatementProductos = con.prepareStatement(query);
 		ResultSet resultSet = preparedStatementProductos.executeQuery();
 		return resultSet;
 	}
 
-	public Connection getConnection(String driverClassName, String conStr,
-			String user, String pwd) {
+	public Connection getConnection(String driverClassName, String conStr, String user, String pwd) {
 		try {
 
 			Class.forName(driverClassName).newInstance();
@@ -640,62 +579,48 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 
 		// Files.lines(Paths.get(path+"/punto4_capital_conf_0.8_sup_0.02_result.txt")).count();
 		// punto4_
-		Files.walk(Paths.get(path)).forEach(
-				filePath -> {
-					if (Files.isRegularFile(filePath)) {
-						File tmp = filePath.toFile();
-						String substrName = tmp.getName();
-						if (substrName.endsWith("result.txt")
-								&& substrName.startsWith("punto4_")) {
-							try {
-								// System.out.println(filePath.getFileName() +
-								// "\t" + Files.lines(tmp.toPath()).count());
+		Files.walk(Paths.get(path)).forEach(filePath -> {
+			if (Files.isRegularFile(filePath)) {
+				File tmp = filePath.toFile();
+				String substrName = tmp.getName();
+				if (substrName.endsWith("result.txt") && substrName.startsWith("punto4_")) {
+					try {
+						// System.out.println(filePath.getFileName() +
+						// "\t" + Files.lines(tmp.toPath()).count());
 
-								;
-								Stream<String> stream = Files.lines(filePath,
-										Charset.forName("Cp1252"));
-								long lineCount = stream.count();
+				;
+				Stream<String> stream = Files.lines(filePath, Charset.forName("Cp1252"));
+				long lineCount = stream.count();
 
-								// punto4_capital_conf_0.8_sup_0.02_result.txt
+				// punto4_capital_conf_0.8_sup_0.02_result.txt
 
-								String region = substrName.substring(
-										substrName.indexOf("punto4_")
-												+ "punto4_".length(),
-										substrName.indexOf("_conf_"));
-								if (region.equals("capital")) {
-									region = "Capital Federal";
-								} else if (region.equals("BA")) {
-									region = "Buenos Aires";
-								} else if (region.equals("interior")) {
-									region = "Interior";
-								} else
-									region = "NA";
+				String region = substrName.substring(substrName.indexOf("punto4_") + "punto4_".length(), substrName.indexOf("_conf_"));
+				if (region.equals("capital")) {
+					region = "Capital Federal";
+				} else if (region.equals("BA")) {
+					region = "Buenos Aires";
+				} else if (region.equals("interior")) {
+					region = "Interior";
+				} else
+					region = "NA";
 
-								String tmpConf = substrName.substring(
-										substrName.indexOf("conf_")
-												+ "conf_".length(),
-										substrName.indexOf("_sup"));
-								String tmpSup = substrName.substring(
-										substrName.indexOf("sup_")
-												+ "sup_".length(),
-										substrName.indexOf("_result"));
-								System.out.println(region + "\t" + tmpConf
-										+ "\t" + tmpSup + "\t" + (lineCount));
-								stream.close();
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					}
-				});
+				String tmpConf = substrName.substring(substrName.indexOf("conf_") + "conf_".length(), substrName.indexOf("_sup"));
+				String tmpSup = substrName.substring(substrName.indexOf("sup_") + "sup_".length(), substrName.indexOf("_result"));
+				System.out.println(region + "\t" + tmpConf + "\t" + tmpSup + "\t" + (lineCount));
+				stream.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+}		);
 	}
 
 	@Test
 	public void correrOrientadoAVentasProdDescGen() throws SQLException {
 
-		System.out
-				.println("-------- MySQL JDBC Connection Testing ------------");
+		System.out.println("-------- MySQL JDBC Connection Testing ------------");
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -709,8 +634,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		Connection connection = null;
 
 		try {
-			connection = DriverManager.getConnection(
-					"jdbc:mysql://192.168.1.113:3306/dm-tp1", "dmkd", "dmkd");
+			connection = DriverManager.getConnection("jdbc:mysql://192.168.1.113:3306/dm-tp1", "dmkd", "dmkd");
 
 		} catch (SQLException e) {
 			System.out.println("Connection Failed! Check output console");
@@ -725,14 +649,12 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 			String acotadoADesc = "Select VP.Venta_ID, P.DescGen FROM TP_Ventas_Prod VP inner JOIN TP_Productos  P ON VP.Prod_ID = P.Prod_ID";
 
 			// armar itemsets
-			PreparedStatement preparedStatement = connection
-					.prepareStatement(acotadoADesc);
+			PreparedStatement preparedStatement = connection.prepareStatement(acotadoADesc);
 
 			String colsDetalladoAIds = "Select Prod_ID FROM TP_Productos order by Prod_ID";
 			String colsAcotadoADesc = "select P.DescGen  from TP_Productos P  Group by P.DescGen ";
 			// armo las columnas
-			PreparedStatement preparedStatementProductos = connection
-					.prepareStatement(colsAcotadoADesc);
+			PreparedStatement preparedStatementProductos = connection.prepareStatement(colsAcotadoADesc);
 
 			// Result set get the result of the SQL query
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -748,15 +670,12 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 
 			Map<String, List<String>> mapa = armaItemsetsAcotado(resultSet);
 
-			Map<String, Map<String, Integer>> mapaApriori = armaItemsetsParaApriori(
-					mapa, mapaProdsDefaultVacio);
+			Map<String, Map<String, Integer>> mapaApriori = armaItemsetsParaApriori(mapa, mapaProdsDefaultVacio);
 
 			// muestraItemsets(mapa);
 
-			String tmpResult = muestraItemsetsAprioriLogical(mapaApriori,
-					mapaProdsDefaultVacio);
-			String tmpResultWeka = muestraItemsetsAprioriWekaLogical(
-					mapaApriori, mapaProdsDefaultVacio);
+			String tmpResult = muestraItemsetsAprioriLogical(mapaApriori, mapaProdsDefaultVacio);
+			String tmpResultWeka = muestraItemsetsAprioriWekaLogical(mapaApriori, mapaProdsDefaultVacio);
 
 			// System.out.println(tmpResult);
 
@@ -780,10 +699,8 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 			// armo donde va a guardar el archivo siendo:
 			// carpeta pathDatos, y nombre de archivo compuesto por
 			// fechaAlMomento mas exportResult
-			String result = path + fechaAlMomento
-					+ "_dm_itemset_ventas_prod_desc.txt";
-			String result2 = path + fechaAlMomento
-					+ "_dm_itemset_weka_ventas_prod_desc.csv";
+			String result = path + fechaAlMomento + "_dm_itemset_ventas_prod_desc.txt";
+			String result2 = path + fechaAlMomento + "_dm_itemset_weka_ventas_prod_desc.csv";
 
 			writeToFile(tmpResult, ENCODE, result);
 			writeToFile(tmpResultWeka, ENCODE, result2);
@@ -799,8 +716,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 	@Test
 	public void testConeccion() throws SQLException {
 
-		System.out
-				.println("-------- MySQL JDBC Connection Testing ------------");
+		System.out.println("-------- MySQL JDBC Connection Testing ------------");
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -814,8 +730,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		Connection connection = null;
 
 		try {
-			connection = DriverManager.getConnection(
-					"jdbc:mysql://192.168.1.113:3306/dm-tp1", "dmkd", "dmkd");
+			connection = DriverManager.getConnection("jdbc:mysql://192.168.1.113:3306/dm-tp1", "dmkd", "dmkd");
 
 		} catch (SQLException e) {
 			System.out.println("Connection Failed! Check output console");
@@ -830,20 +745,15 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 			String acotadoADesc = "Select VP.Venta_ID, P.DescGen FROM TP_Ventas_Prod VP inner JOIN TP_Productos  P ON VP.Prod_ID = P.Prod_ID";
 
 			// si hago esto piso el mapa :S
-			String acotadoACliente = "Select V.CLI_ID, P.DescGen "
-					+ "FROM TP_Ventas_Prod VP "
-					+ "inner JOIN TP_Productos  P ON VP.Prod_ID = P.Prod_ID "
-					+ "inner JOIN TP_Ventas V ON VP.Venta_ID = V.Venta_ID ";
+			String acotadoACliente = "Select V.CLI_ID, P.DescGen " + "FROM TP_Ventas_Prod VP " + "inner JOIN TP_Productos  P ON VP.Prod_ID = P.Prod_ID " + "inner JOIN TP_Ventas V ON VP.Venta_ID = V.Venta_ID ";
 
 			// armar itemsets
-			PreparedStatement preparedStatement = connection
-					.prepareStatement(acotadoACliente);
+			PreparedStatement preparedStatement = connection.prepareStatement(acotadoACliente);
 
 			String colsDetalladoAIds = "Select Prod_ID FROM TP_Productos order by Prod_ID";
 			String colsAcotadoADesc = "select P.DescGen  from TP_Productos P  Group by P.DescGen ";
 			// armo las columnas
-			PreparedStatement preparedStatementProductos = connection
-					.prepareStatement(colsAcotadoADesc);
+			PreparedStatement preparedStatementProductos = connection.prepareStatement(colsAcotadoADesc);
 
 			// Result set get the result of the SQL query
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -859,15 +769,12 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 
 			Map<String, List<String>> mapa = armaItemsetsAcotado(resultSet);
 
-			Map<String, Map<String, Integer>> mapaApriori = armaItemsetsParaApriori(
-					mapa, mapaProdsDefaultVacio);
+			Map<String, Map<String, Integer>> mapaApriori = armaItemsetsParaApriori(mapa, mapaProdsDefaultVacio);
 
 			// muestraItemsets(mapa);
 
-			String tmpResult = muestraItemsetsAprioriLogical(mapaApriori,
-					mapaProdsDefaultVacio);
-			String tmpResultWeka = muestraItemsetsAprioriWekaLogical(
-					mapaApriori, mapaProdsDefaultVacio);
+			String tmpResult = muestraItemsetsAprioriLogical(mapaApriori, mapaProdsDefaultVacio);
+			String tmpResultWeka = muestraItemsetsAprioriWekaLogical(mapaApriori, mapaProdsDefaultVacio);
 
 			// System.out.println(tmpResult);
 
@@ -942,13 +849,11 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 	 * @param pathYNombre
 	 * @param writer
 	 */
-	private void writeToFile(String stringToWrite, final String encoding,
-			String pathYNombre) {
+	private void writeToFile(String stringToWrite, final String encoding, String pathYNombre) {
 
 		Writer writer = null;
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(pathYNombre), encoding));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(pathYNombre), encoding));
 			writer.write(stringToWrite);
 			System.out.println("output en: " + pathYNombre);
 		} catch (Exception e) {
@@ -968,8 +873,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		}
 	}
 
-	private Map<String, Integer> armaMapaDefaultVacio(
-			ResultSet resultSetTablaProds) throws SQLException {
+	private Map<String, Integer> armaMapaDefaultVacio(ResultSet resultSetTablaProds) throws SQLException {
 		Map<String, Integer> mapa = new HashMap<String, Integer>();
 		while (resultSetTablaProds.next()) {
 			mapa.put(resultSetTablaProds.getString("Prod_ID"), 0);
@@ -977,8 +881,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		return mapa;
 	}
 
-	private Map<String, Integer> armaMapaDefaultVacioAcotado(
-			ResultSet resultSetTablaProds) throws SQLException {
+	private Map<String, Integer> armaMapaDefaultVacioAcotado(ResultSet resultSetTablaProds) throws SQLException {
 		Map<String, Integer> mapa = new HashMap<String, Integer>();
 		while (resultSetTablaProds.next()) {
 			mapa.put(resultSetTablaProds.getString("DescGen"), 0);
@@ -986,9 +889,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		return mapa;
 	}
 
-	private Map<String, Map<String, Integer>> armaItemsetsParaApriori(
-			Map<String, List<String>> mapaItemsets,
-			Map<String, Integer> defaultVacio) throws SQLException {
+	private Map<String, Map<String, Integer>> armaItemsetsParaApriori(Map<String, List<String>> mapaItemsets, Map<String, Integer> defaultVacio) throws SQLException {
 
 		// dado itemset, cuantos prod tiene
 		Map<String, Map<String, Integer>> mapa = new HashMap<String, Map<String, Integer>>();
@@ -1018,8 +919,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		return mapa;
 	}
 
-	private String muestraItemsetsAprioriWeka(
-			Map<String, Map<String, Integer>> mapa, Map<String, Integer> header) {
+	private String muestraItemsetsAprioriWeka(Map<String, Map<String, Integer>> mapa, Map<String, Integer> header) {
 		StringBuilder build = new StringBuilder();
 		final String TAB = ",";
 		final String ENTER = "\n";
@@ -1041,8 +941,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 			Map<String, Integer> currentSet = mapa.get(key);
 			for (String itemValue : currentSet.keySet()) {
 				// valor de si o no itemset
-				build.append("'").append(currentSet.get(itemValue)).append("'")
-						.append(TAB);
+				build.append("'").append(currentSet.get(itemValue)).append("'").append(TAB);
 			}
 			// saca el tab sobrante
 			build.deleteCharAt(build.length() - 1);
@@ -1055,8 +954,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		return build.toString();
 	}
 
-	private String muestraItemsetsAprioriWekaConSignos(
-			Map<String, Map<String, Integer>> mapa, Map<String, Integer> header) {
+	private String muestraItemsetsAprioriWekaConSignos(Map<String, Map<String, Integer>> mapa, Map<String, Integer> header) {
 		StringBuilder build = new StringBuilder();
 		final String TAB = ",";
 		final String ENTER = "\n";
@@ -1095,8 +993,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		return build.toString();
 	}
 
-	private String muestraItemsetsAprioriWekaLogical(
-			Map<String, Map<String, Integer>> mapa, Map<String, Integer> header) {
+	private String muestraItemsetsAprioriWekaLogical(Map<String, Map<String, Integer>> mapa, Map<String, Integer> header) {
 		StringBuilder build = new StringBuilder();
 		final String TAB = ",";
 		final String ENTER = "\n";
@@ -1135,8 +1032,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		return build.toString();
 	}
 
-	private String muestraItemsetsAprioriLogical(
-			Map<String, Map<String, Integer>> mapa, Map<String, Integer> header) {
+	private String muestraItemsetsAprioriLogical(Map<String, Map<String, Integer>> mapa, Map<String, Integer> header) {
 		StringBuilder build = new StringBuilder();
 		final String TAB = "\t";
 		final String ENTER = "\n";
@@ -1178,8 +1074,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		return build.toString();
 	}
 
-	private String muestraItemsetsApriori(
-			Map<String, Map<String, Integer>> mapa, Map<String, Integer> header) {
+	private String muestraItemsetsApriori(Map<String, Map<String, Integer>> mapa, Map<String, Integer> header) {
 		StringBuilder build = new StringBuilder();
 		final String TAB = "\t";
 		final String ENTER = "\n";
@@ -1235,8 +1130,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		System.out.println(build.toString());
 	}
 
-	private Map<String, List<String>> armaItemsetsAcotadoClientes(
-			ResultSet resultSet) throws SQLException {
+	private Map<String, List<String>> armaItemsetsAcotadoClientes(ResultSet resultSet) throws SQLException {
 
 		Map<String, List<String>> mapa = new HashMap<String, List<String>>();
 		while (resultSet.next()) {
@@ -1260,8 +1154,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		return mapa;
 	}
 
-	private Map<String, List<String>> armaItemsetsAcotado(ResultSet resultSet)
-			throws SQLException {
+	private Map<String, List<String>> armaItemsetsAcotado(ResultSet resultSet) throws SQLException {
 
 		Map<String, List<String>> mapa = new HashMap<String, List<String>>();
 		while (resultSet.next()) {
@@ -1284,8 +1177,7 @@ private void armaqueries2015(List<ReglasTodasDto> reglasCapital) {
 		return mapa;
 	}
 
-	private Map<String, List<String>> armaItemsets(ResultSet resultSet)
-			throws SQLException {
+	private Map<String, List<String>> armaItemsets(ResultSet resultSet) throws SQLException {
 
 		Map<String, List<String>> mapa = new HashMap<String, List<String>>();
 		while (resultSet.next()) {

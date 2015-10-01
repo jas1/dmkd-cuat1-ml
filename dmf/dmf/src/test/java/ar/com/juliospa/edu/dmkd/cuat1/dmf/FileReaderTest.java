@@ -1,7 +1,5 @@
 package ar.com.juliospa.edu.dmkd.cuat1.dmf;
 
-import java.nio.file.Files;
-
 import org.junit.Test;
 
 public class FileReaderTest {
