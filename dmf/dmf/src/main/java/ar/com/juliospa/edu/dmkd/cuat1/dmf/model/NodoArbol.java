@@ -4,31 +4,33 @@ import java.text.DecimalFormat;
 
 public class NodoArbol {
 
-	private static final String LINE_SEPARATOR = "line.separator";
-	private String archivoOriginario;
-	private String nombreNodo;
-	private String queryNodo;
+	private static final String NO_DISPONIBLE = "no-disponible";
+	protected static final String LINE_SEPARATOR = "line.separator";
+	protected String archivoOriginario;
+	protected String nombreNodo;
 	
-	private Long cantBaja1;
-	private Long cantBaja2;
-	private Long cantContinua;
+	protected Long cantBaja1;
+	protected Long cantBaja2;
+	protected Long cantContinua;
 	
-	private Long formulaCosto;
-	private Long formulaGanancia;
-	private Long formulaResultado;
+	protected Long formulaCosto;
+	protected Long formulaGanancia;
+	protected Long formulaResultado;
 
-	private String defaultSelect;
-	private String defaultTabla;
-	private String defaultGroupBy;
+	public NodoArbol(NodoResultadoTablaNormalizada nodo) {
+		formulaGanancia = 8000L;
+		formulaCosto = 200L;
+		archivoOriginario = NO_DISPONIBLE;
+		nombreNodo = "Nodo "+ nodo.getNodo();
+		cantBaja1 = nodo.getBaja1num();
+		cantBaja2 = nodo.getBaja2num();
+		cantContinua = nodo.getContNum();
+	}
+	
 	
 	public NodoArbol() {
 		formulaGanancia = 8000L;
 		formulaCosto = 200L;
-		
-//		defaultSelect = "select clase, count(*) as cantidad, count(*)*200 as costo, IF(clase='BAJA+2',count(*)*8000,0) as ganancia ";
-		defaultSelect = "select clase, count(*) as cantidad ";
-		defaultTabla =  " from dm_finanzas_201504 ";
-		defaultGroupBy = " group by clase;";
 	}
 	
 	public Long getTotalNodo(){
@@ -36,15 +38,6 @@ public class NodoArbol {
 			return cantBaja2+ cantBaja1 + cantContinua;	
 		}
 		return null;
-	}
-	
-	/**
-	 * devuelve la query armada  defaultSelect + defaultTabla + queryNodo + defaultGroupBy
-	 * @return
-	 */
-	public String getQuerySelect(){
-		String tmp = defaultSelect + defaultTabla + queryNodo + defaultGroupBy;
-		return tmp.replace("; group by clase;", " group by clase;");
 	}
 	
 	public static String getResumenNodoLineaTitulo(){
@@ -57,7 +50,14 @@ public class NodoArbol {
 	
 	public String getResumenNodoLinea(){
 		Long total = getTotalNodo();
-		String ret = archivoOriginario.substring(archivoOriginario.indexOf("null_"))+"\t"+nombreNodo + "\t"+total + "\t"+cantBaja2+"\t"+cantBaja1+"\t"+cantContinua+"\t";
+		String ret = "";
+		if (archivoOriginario != NO_DISPONIBLE) {
+			ret = archivoOriginario.substring(archivoOriginario.indexOf("null_"));	
+		}else{
+			ret = NO_DISPONIBLE+"\t"+nombreNodo + "\t"+total + "\t"+cantBaja2+"\t"+cantBaja1+"\t"+cantContinua+"\t"	;
+		}
+		
+		
 		
 		if (total != null && total!=0) {
 			
@@ -80,7 +80,6 @@ public class NodoArbol {
 	
 	public String getResumenNodo(){
 		Long total = getTotalNodo();
-		DecimalFormat df = new DecimalFormat("#,###.0000");
 		String ret = nombreNodo + " [ " + total +" ]" + System.getProperty(LINE_SEPARATOR) ;
 		ret += "BAJA+2\tBAJA+1\tCONTINUA"+ System.getProperty(LINE_SEPARATOR) ;
 		ret += cantBaja2+ "\t" + cantBaja1 + "\t" + cantContinua+ System.getProperty(LINE_SEPARATOR) ;
@@ -128,12 +127,6 @@ public class NodoArbol {
 	}
 	public void setNombreNodo(String nombreNodo) {
 		this.nombreNodo = nombreNodo;
-	}
-	public String getQueryNodo() {
-		return queryNodo;
-	}
-	public void setQueryNodo(String queryNodo) {
-		this.queryNodo = queryNodo;
 	}
 	public Long getCantBaja1() {
 		return cantBaja1;

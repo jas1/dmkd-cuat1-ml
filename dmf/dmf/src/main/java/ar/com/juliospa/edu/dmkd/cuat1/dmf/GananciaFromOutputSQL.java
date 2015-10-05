@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.model.NodoArbol;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.model.NodoArbolSQL;
 
 /**
  * la idea de esta clase es generar el resultado de la ganancia por nodo dado el output del arbol
@@ -42,9 +42,9 @@ public abstract class  GananciaFromOutputSQL {
 		return resultSet;
 	}
 	
-	public static List<NodoArbol> actualizarNodosSegunBase(List<NodoArbol> nodos,Connection con) throws SQLException{
-		List<NodoArbol> nodosResult = new ArrayList<NodoArbol>();
-		for (NodoArbol nodoArbol : nodos) {
+	public static List<NodoArbolSQL> actualizarNodosSegunBase(List<NodoArbolSQL> nodos,Connection con) throws SQLException{
+		List<NodoArbolSQL> nodosResult = new ArrayList<NodoArbolSQL>();
+		for (NodoArbolSQL nodoArbol : nodos) {
 			nodosResult.add(popularNodoArbol(con, nodoArbol));
 		}
 		return nodosResult;
@@ -55,7 +55,7 @@ public abstract class  GananciaFromOutputSQL {
 	 * @param nodoArbol
 	 * @throws SQLException
 	 */
-	private static NodoArbol popularNodoArbol(Connection con, NodoArbol nodoArbol) throws SQLException {
+	private static NodoArbolSQL popularNodoArbol(Connection con, NodoArbolSQL nodoArbol) throws SQLException {
 		ResultSet result = obtenerResultset(nodoArbol.getQuerySelect(),con);
 	
 		nodoArbol.setCantContinua(0L);
@@ -91,7 +91,7 @@ public abstract class  GananciaFromOutputSQL {
 		return nodoArbol;
 	}
 	
-	public static List<NodoArbol> parsearArchivo(String archivoPath) throws IOException {
+	public static List<NodoArbolSQL> parsearArchivo(String archivoPath) throws IOException {
 		List<String> lines =  new ArrayList<String>();
 	    Path path = Paths.get(archivoPath);
 	    //When filteredLines is closed, it closes underlying stream as well as underlying file.
@@ -100,12 +100,12 @@ public abstract class  GananciaFromOutputSQL {
 	    	filteredLines.forEachOrdered( s -> addLine(lines,s));
 	    }
 	    
-	    List<NodoArbol> nodos =  new ArrayList<NodoArbol>();
+	    List<NodoArbolSQL> nodos =  new ArrayList<NodoArbolSQL>();
 	    boolean arranco = true;
-	    NodoArbol current = new NodoArbol();
+	    NodoArbolSQL current = new NodoArbolSQL();
 	    for (String line : lines) {
 	    	if (arranco) {
-	    		current = new NodoArbol();
+	    		current = new NodoArbolSQL();
 	    		current.setArchivoOriginario(archivoPath);
 	    		current.setNombreNodo(line.substring(0+3 , line.length()-4));
 	    		arranco= false;
@@ -126,17 +126,17 @@ public abstract class  GananciaFromOutputSQL {
 	public static String resumenArbolCompletoFromOutput(final String archivoPath, Connection con,boolean showQueries) throws IOException, SQLException {
 		
 		StringBuilder build = new StringBuilder();
-		List<NodoArbol> nodos = GananciaFromOutputSQL.parsearArchivo(archivoPath);
+		List<NodoArbolSQL> nodos = GananciaFromOutputSQL.parsearArchivo(archivoPath);
 		
 		if (showQueries) {
-			for (NodoArbol nodoArbol : nodos) {
+			for (NodoArbolSQL nodoArbol : nodos) {
 				build.append(nodoArbol.getNombreNodo() +": " + nodoArbol.getQuerySelect()).append(System.getProperty(LINE_SEPARATOR));
 			}
 		}
-		List<NodoArbol> nodosUpd = GananciaFromOutputSQL.actualizarNodosSegunBase(nodos,con);
+		List<NodoArbolSQL> nodosUpd = GananciaFromOutputSQL.actualizarNodosSegunBase(nodos,con);
 		
-		build.append(NodoArbol.getResumenNodoLineaTitulo()).append(System.getProperty(LINE_SEPARATOR));
-		for (NodoArbol nodoArbol : nodosUpd) {
+		build.append(NodoArbolSQL.getResumenNodoLineaTitulo()).append(System.getProperty(LINE_SEPARATOR));
+		for (NodoArbolSQL nodoArbol : nodosUpd) {
 //			build.append(nodoArbol.getNombreNodo() +": " + nodoArbol.getQuerySelect();
 			build.append(nodoArbol.getResumenNodoLinea()).append(System.getProperty(LINE_SEPARATOR));
 		}

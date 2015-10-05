@@ -9,8 +9,41 @@ import java.sql.SQLException;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class GananciaFromOutputSqlTest {
+public class GananciaFromOutputTest {
 
+	@Test
+	public void pruebaUnicoTablaSPSSVersion0() {
+		try {
+			
+			final String archivoPath = "C:/Users/julio/Desktop/dmf_wd/corrida_base/corrida_version_0_std.txt";
+			System.out.println(GananciaFromOutputTablaSPSSNormalizada.resumenArbolCompletoFromOutputSoloTrain(archivoPath));
+
+			Assert.assertTrue(true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Assert.fail();
+		}
+		
+	}
+	
+	@Test
+	public void pruebaUnicoTablaSPSSVersion1() {
+		try {
+			
+			final String archivoPath = "C:/Users/julio/Desktop/dmf_wd/corrida_base/corrida_version_1_std.txt";
+			System.out.println(GananciaFromOutputTablaSPSSNormalizada.resumenArbolCompletoFromOutput(archivoPath));
+
+			Assert.assertTrue(true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Assert.fail();
+		}
+		
+	}
+	
+	
 	@Test
 	public void pruebaTodos() {
 		try {
