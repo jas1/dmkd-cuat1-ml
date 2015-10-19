@@ -25,13 +25,25 @@ import com.ibm.statistics.plugin.StatsUtil;
  */
 public class AutomatizarCorridasArbolJulio {
 
-	
-	public static void pruebaEjecucionSpssArbolVersion2(){
+	/**
+	 * @param configArbol
+	 */
+	public static AutomatizarCorridasArbolJulioResultado ejecucionArbolVersionParametrizadoArbolNoChaidNoCampos(AutomatizarCorridasArbolJulioConfig configArbol) {
+		AutomatizarCorridasArbolJulioResultado resultado = new AutomatizarCorridasArbolJulioResultado(configArbol);
+		String[] commands= comandoArbolVersionParametrizadoArbolNoChaidNoCampos(configArbol);
 		
-		String outFolder = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/";
+		resultado.setTiempoInicioEjecucion(new Date());
+		ejecutarComandosSpss(commands);
+		resultado.setTiempoFinEjecucion(new Date());
 		
-        String[] commands= comandoArbolVersion2("C:/Users/julio/Desktop/dmf_wd/nulos/DataSetAbril2015.sav",outFolder);
-		
+		resultado.setTiempoFin(new Date());
+		return resultado ;
+	}
+
+	/**
+	 * @param commands
+	 */
+	private static void ejecutarComandosSpss(String[] commands) {
 		try {
 			StatsUtil.start();
 			StatsUtil.submit(commands);
@@ -39,7 +51,7 @@ public class AutomatizarCorridasArbolJulio {
 		} catch (StatsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
 	}
 	
 	/**
@@ -49,17 +61,9 @@ public class AutomatizarCorridasArbolJulio {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static String[] comandoArbolVersion2(String origenDatosSav, String outputFolder ){
-		
-		
-		
-		String seed= "12345";
+	public static String[] comandoArbolVersionParametrizadoArbolNoChaidNoCampos(AutomatizarCorridasArbolJulioConfig configArbol ){
+
 		String timeStamp = getTimeStamp(null,null);
-		
-		String tipoArbol = "CHAID";
-		Integer maximaProfundidad = 6;
-		Integer minParentSize = 350;
-		Integer minChildSize = 245;
 		
 		String campos = "numero_de_cliente [n] foto_mes [s] marketing_activo_ultimos90dias [n] cliente_vip [n] cliente_sucursal [s] cliente_edad [s] cliente_antiguedad [s] mrentabilidad [s] mrentabilidad_annual [n] mcomisiones [s] mactivos_margen [s] mpasivos_margen [s] marketing_coss_selling [n] tpaquete_premium [n] tpaquete2 [n] tpaquete3 [n] tpaquete4 [n] tpaquete5 [n] tpaquete6 [n] tpaquete7 [n] tpaquete8 [n] tpaquete9 [n] tcuentas [n] tcuenta_corriente [n] mcuenta_corriente_Nopaquete [s]"+
 		" mcuenta_corriente_Paquete [s] mcuenta_corriente_dolares [n] tcaja_ahorro [n] mcaja_ahorro_Paquete [s] mcaja_ahorro_Nopaquete [s] mcaja_ahorro_dolares [s] mdescubierto_preacordado [n] mcuentas_saldo [s] ttarjeta_debito [n] ctarjeta_debito_transacciones [s] mautoservicio [s] ttarjeta_visa [n] ctarjeta_visa_transacciones [s] mtarjeta_visa_consumo [s] ttarjeta_master [n] ctarjeta_master_transacciones [s] mtarjeta_master_consumo [s] cprestamos_personales [s] mprestamos_personales [s] cprestamos_prendarios [n]"+
@@ -71,7 +75,7 @@ public class AutomatizarCorridasArbolJulio {
 		" Master_fechaalta [s] Master_mconsumototal [s] Master_tconsumos [n] Master_tadelantosefectivo [n] Master_mpagominimo [s] Visa_marca_atraso [n] Visa_cuenta_estado [s] Visa_mfinanciacion_limite [s] Visa_Fvencimiento [s] Visa_Finiciomora [s] Visa_msaldototal [s] Visa_msaldopesos [s] Visa_msaldodolares [s] Visa_mconsumospesos [s] Visa_mconsumosdolares [s] Visa_mlimitecompra [s] Visa_madelantopesos [s] Visa_madelantodolares [s] Visa_fultimo_cierre [s] Visa_mpagado [s] Visa_mpagospesos [s] Visa_mpagosdolares [s]"+
 		" Visa_fechaalta [s] Visa_mconsumototal [s] Visa_tconsumos [n] Visa_tadelantosefectivo [n] Visa_mpagominimo [s] participa [n]";
 		
-		String carpetaOutput = outputFolder+timeStamp;
+		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 		File carpetaOut = new File(carpetaOutput);
 		if (carpetaOut.mkdir()) {
 			String fileXmlTest = carpetaOutput+"/"+"_test_model.xml";
@@ -83,7 +87,7 @@ public class AutomatizarCorridasArbolJulio {
 					"OMS",
 	                "/DESTINATION FORMAT=HTML OUTFILE='"+outFileName+"'.",
 					"GET",
-				"  FILE='"+origenDatosSav+"'.",
+				"  FILE='"+configArbol.getOrigenDatosSav()+"'.",
 				"DATASET NAME DataSet1 WINDOW=FRONT.",
 				"* Define Variable Properties.",
 				"*clase.",
@@ -92,7 +96,7 @@ public class AutomatizarCorridasArbolJulio {
 				"  'BAJA+2                  ' 'POSITIVO'",
 				"  'CONTINUA                ' 'NEGATIVO'.",
 				"EXECUTE.",
-				"SET SEED="+seed+".",
+				"SET SEED="+configArbol.getSeed()+".",
 				"* Decision Tree.",
 				"TREE clase [n] BY ",campos,
 
@@ -102,8 +106,8 @@ public class AutomatizarCorridasArbolJulio {
 				"  /GAIN SUMMARYTABLE=YES CATEGORYTABLE=YES TYPE=[NODE] SORT=DESCENDING CUMULATIVE=NO",
 				"  /RULES NODES=TERMINAL SYNTAX=SQL TYPE=SCORING OUTFILE='"+fileSql+"'",
 				"  /SAVE NODEID PREDVAL PREDPROB ASSIGNMENT",
-				"  /METHOD TYPE="+tipoArbol,
-				"  /GROWTHLIMIT MAXDEPTH="+maximaProfundidad+" MINPARENTSIZE="+minParentSize+" MINCHILDSIZE="+minChildSize,
+				"  /METHOD TYPE="+configArbol.getTipoArbol(),
+				"  /GROWTHLIMIT MAXDEPTH="+configArbol.getMaximaProfundidad()+" MINPARENTSIZE="+configArbol.getMinParentSize()+" MINCHILDSIZE="+configArbol.getMinChildSize(),
 				"  /VALIDATION TYPE=SPLITSAMPLE(70.00) OUTPUT=BOTHSAMPLES",
 				"  /CHAID ALPHASPLIT=0.05 ALPHAMERGE=0.05 SPLITMERGED=NO CHISQUARE=PEARSON CONVERGE=0.001 MAXITERATIONS=100 ADJUST=BONFERRONI INTERVALS=10",
 				"  /COSTS CUSTOM= 'BAJA+1' 'BAJA+1' [0] 'BAJA+1' 'BAJA+2' [200] 'BAJA+1' 'CONTINUA' [0]  'BAJA+2' 'BAJA+1' [7800] 'BAJA+2' 'BAJA+2' [0] 'BAJA+2' 'CONTINUA' [7800]  'CONTINUA' 'BAJA+1' [0] 'CONTINUA' 'BAJA+2' [200] 'CONTINUA' 'CONTINUA' [0]",
