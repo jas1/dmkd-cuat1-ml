@@ -33,16 +33,54 @@ public class DBFinanzasDBQueryBuilder {
 		listaBools = converToLista(tinyintList);
 	}
 	
-	public void crearAvgMaxMinUltimos6() {
+	public String getColumnNamesUltimos6aLoBruto(){
+		
+		List<String> blacklistColumnas = new ArrayList<String>();
+		blacklistColumnas.add("numero_de_cliente");
+		blacklistColumnas.add("foto_mes");
+		blacklistColumnas.add("clase");
+		
+		List<String> funciones = new ArrayList<String>();
+		funciones.add("MAX");
+		funciones.add("MIN");
+		funciones.add("AVG");
+		
+		StringBuilder camposSelectBuilder = new StringBuilder();
+		// ahora vienen todas las funciones
+		Map<String, String> mapaTipos = DBFinanzasDBQueryBuilder.mapaTipos();
+		for (String nombreCol : mapaTipos.keySet()) {
+			
+			// MAX(mrentabilidad) as mrentabilidad_MAX ,MIN(mrentabilidad) as mrentabilidad_MIN ,AVG(mrentabilidad) as mrentabilidad_AVG,
+			// si no esta en listado de columnas excluidas
+			if (!blacklistColumnas.contains(nombreCol)) {
+				// para cada funcion crea una nueva col
+				for (String funcion : funciones) {
+					camposSelectBuilder.append(nombreCol).append("_").append(funcion).append(", ");
+				}
+				// cada vez que se acaban las funciones de 1 columna tira un enter asi quedan agrupadas de a 3
+				camposSelectBuilder.append(System.getProperty("line.separator"));
+			}
+		}
+		camposSelectBuilder.deleteCharAt(camposSelectBuilder.length()-4);
+		
+		return camposSelectBuilder.toString();
+		
+	}
+	
+	public String crearAvgMaxMinUltimos6aLoBruto() {
 //		excluye ID_cliente 
 //		excluye periodo
 
-		List<String> funciones = new ArrayList<String>();
-		funciones.add("MAX(REEMPLAZAR)");
-		funciones.add("MIN(REEMPLAZAR)");
-		funciones.add("AVG(REEMPLAZAR)");
+		List<String> blacklistColumnas = new ArrayList<String>();
+		blacklistColumnas.add("numero_de_cliente");
+		blacklistColumnas.add("foto_mes");
+		blacklistColumnas.add("clase");
 		
-		String query = "max()"; 
+		List<String> funciones = new ArrayList<String>();
+		funciones.add("MAX");
+		funciones.add("MIN");
+		funciones.add("AVG");
+		
 		// FIXME: falta terminar esto. 
 		// query modelo, seria algo asi salvo para los campos  numero_de_cliente,foto_mes,clase
 		/*
@@ -61,20 +99,30 @@ numero_de_cliente	foto_mes	mrentabilidad_MAX	mrentabilidad_MIN	mrentabilidad_AVG
 
 
 		 */
-		
+		StringBuilder camposSelectBuilder = new StringBuilder();
+		camposSelectBuilder.append("select numero_de_cliente,foto_mes, ");
+		camposSelectBuilder.append(System.getProperty("line.separator"));
+		// ahora vienen todas las funciones
 		Map<String, String> mapaTipos = DBFinanzasDBQueryBuilder.mapaTipos();
-		for (String tipos : mapaTipos.keySet()) {
-			if (!mapaTipos.get(tipos).equals("numero_de_cliente") && 
-				!mapaTipos.get(tipos).equals("foto_mes") &&
-				!mapaTipos.get(tipos).equals("clase") ) {
-				
-				for (String string : funciones) {
-					
+		for (String nombreCol : mapaTipos.keySet()) {
+			
+			// MAX(mrentabilidad) as mrentabilidad_MAX ,MIN(mrentabilidad) as mrentabilidad_MIN ,AVG(mrentabilidad) as mrentabilidad_AVG,
+			// si no esta en listado de columnas excluidas
+			if (!blacklistColumnas.contains(nombreCol)) {
+				// para cada funcion crea una nueva col
+				for (String funcion : funciones) {
+					camposSelectBuilder.append(funcion).append("(").append(nombreCol).append(") as ").append(nombreCol).append("_").append(funcion).append(", ");
 				}
-				
-//				String newName = tipos.
+				// cada vez que se acaban las funciones de 1 columna tira un enter asi quedan agrupadas de a 3
+				camposSelectBuilder.append(System.getProperty("line.separator"));
 			}
 		}
+		camposSelectBuilder.deleteCharAt(camposSelectBuilder.length()-4);
+		
+		camposSelectBuilder.append(" from dm_finanzas_historia_ultimos_6 f group by numero_de_cliente,foto_mes");
+		
+		return camposSelectBuilder.toString();
+		
 		
 	}
 	
@@ -91,6 +139,14 @@ numero_de_cliente	foto_mes	mrentabilidad_MAX	mrentabilidad_MIN	mrentabilidad_AVG
 		}
 		return listaBig;
 	}
+	/**
+	 * ejemplo de lo almacenado
+	 * mapaTipos.put("numero_de_cliente", "BIGINT(20)"); <br>
+	 * mapaTipos.put("mrentabilidad", "DOUBLE");<br>
+	 * mapaTipos.put("tpaquete6", "TINYINT");<br>
+	 * mapaTipos.put("clase", "TEXT");<br>
+	 * @return
+	 */
 	public static Map<String, String> mapaTipos() {
 		Map<String, String> mapaTipos = new HashMap<String, String>();
 		mapaTipos.put("numero_de_cliente", "BIGINT(20)");

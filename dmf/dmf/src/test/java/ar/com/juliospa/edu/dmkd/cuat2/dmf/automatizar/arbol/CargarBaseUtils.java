@@ -14,6 +14,13 @@ import org.junit.Test;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.db.DBFinanzasDBQueryBuilder;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.db.DMFinanzasDBLoader;
 
+/**
+ * CUIDADO / WARNING
+ * NO EJECUTAR TODOS LOS TEST A LA VEZ PORQUE ROMPES TOOODO D: ! !! 
+ * ejecutar de a 1
+ * @author julio
+ *
+ */
 public class CargarBaseUtils {
 
 	private Connection getConnection() throws Exception {
@@ -38,11 +45,52 @@ public class CargarBaseUtils {
 			throw new Exception("Failed to make connection!");
 		}
 	}
-
+	
+	/**
+	 * para crear la query de avg max y min de los ultimos 6
+	 * en este caso se tiene filtrada la query con que ya existe una tabla que solo tiene los ultimos 6
+	 * de esta forma haces la query mas rapido no tiene que fumarse la db entera
+	 * crearAvgMaxMinUltimos6aLoBruto
+	 * o sea , corre las funciones mas alla si tienen nulls o lo que venga ... ejecuta funcion
+	 */
+	@Test
+	public void crearQuery() {
+		DBFinanzasDBQueryBuilder qbuilder = new DBFinanzasDBQueryBuilder();
+		System.out.println(qbuilder.crearAvgMaxMinUltimos6aLoBruto());
+		System.out.println(qbuilder.getColumnNamesUltimos6aLoBruto());
+		
+		
+	}
+	
+	
+/**
+ * para cargar la DB grande
+ */
 	@Test
 	public void cargarBaseGrande() {
 		DMFinanzasDBLoader loader = new DMFinanzasDBLoader();
-		String path0="C:/Users/julio/Desktop/dmf_wd/producto_premium_2015.txt";
+//		String path0="C:/Users/julio/Desktop/dmf_wd/producto_premium_2015.txt";
+		// cambiado aproposito para no correrlo sin querer.
+		String path0="";
+		try {
+			// primero cargo la db chica para ver si funciona
+			loader.cargarBaseGrande(path0, getConnection());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
+	/**
+	 * paracargar la DB acotada a 201504
+	 */
+	@Test
+	public void cargarBaseChicaPrueba() {
+		DMFinanzasDBLoader loader = new DMFinanzasDBLoader();
+//		String path0 = "C:/Users/julio/Desktop/dmf_wd/producto_premium_201504.txt";
+		// cambiado aproposito para no correrlo sin querer.
+		String path0="";
 		try {
 			// primero cargo la db chica para ver si funciona
 			loader.cargarBaseGrande(path0, getConnection());
@@ -54,20 +102,6 @@ public class CargarBaseUtils {
 	}
 
 	
-	@Test
-	public void cargarBaseChicaPrueba() {
-		DMFinanzasDBLoader loader = new DMFinanzasDBLoader();
-		String path0 = "C:/Users/julio/Desktop/dmf_wd/producto_premium_201504.txt";
-		try {
-			// primero cargo la db chica para ver si funciona
-			loader.cargarBaseGrande(path0, getConnection());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Assert.fail();
-		}
-	}
-
 	@Test
 	public void armaQueryHelper() {
 		Map<String, String> mapaValores =  DBFinanzasDBQueryBuilder.mapaTipos();
