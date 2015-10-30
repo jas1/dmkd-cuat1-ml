@@ -57,9 +57,20 @@ public class CargarBaseUtils {
 	public void crearQuery() {
 		DBFinanzasDBQueryBuilder qbuilder = new DBFinanzasDBQueryBuilder();
 		System.out.println(qbuilder.crearAvgMaxMinUltimos6aLoBruto());
-		System.out.println(qbuilder.getColumnNamesUltimos6aLoBruto());
-		
-		
+//		System.out.println(qbuilder.getColumnNamesUltimos6aLoBruto());
+	}
+	
+	
+	@Test
+	public void crearQueryParaSelectHistoriaVersion1() {
+		DBFinanzasDBQueryBuilder qbuilder = new DBFinanzasDBQueryBuilder();
+		System.out.println(qbuilder.getSelectColumnNamesUltimos6aLoBruto("h"));
+	}
+	
+	@Test
+	public void crearQueryParaHeaderUltimos6Historia() {
+		DBFinanzasDBQueryBuilder qbuilder = new DBFinanzasDBQueryBuilder();
+		System.out.println(qbuilder.getSelectColumnNamesUltimos6aLoBruto(""));
 	}
 	
 	

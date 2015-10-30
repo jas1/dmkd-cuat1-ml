@@ -67,6 +67,40 @@ public class DBFinanzasDBQueryBuilder {
 		
 	}
 	
+	public String getSelectColumnNamesUltimos6aLoBruto(String prefijo){
+		
+		List<String> blacklistColumnas = new ArrayList<String>();
+		blacklistColumnas.add("numero_de_cliente");
+		blacklistColumnas.add("foto_mes");
+		blacklistColumnas.add("clase");
+		
+		List<String> funciones = new ArrayList<String>();
+		funciones.add("MAX");
+		funciones.add("MIN");
+		funciones.add("AVG");
+		String tmpPrefix = ( prefijo!=null && prefijo.length() >0) ? prefijo+".":""; 
+		StringBuilder camposSelectBuilder = new StringBuilder();
+		// ahora vienen todas las funciones
+		Map<String, String> mapaTipos = DBFinanzasDBQueryBuilder.mapaTipos();
+		for (String nombreCol : mapaTipos.keySet()) {
+			
+			// MAX(mrentabilidad) as mrentabilidad_MAX ,MIN(mrentabilidad) as mrentabilidad_MIN ,AVG(mrentabilidad) as mrentabilidad_AVG,
+			// si no esta en listado de columnas excluidas
+			if (!blacklistColumnas.contains(nombreCol)) {
+				// para cada funcion crea una nueva col
+				for (String funcion : funciones) {
+					camposSelectBuilder.append(tmpPrefix).append(nombreCol).append("_").append(funcion).append(", ");
+				}
+				// cada vez que se acaban las funciones de 1 columna tira un enter asi quedan agrupadas de a 3
+				camposSelectBuilder.append(System.getProperty("line.separator"));
+			}
+		}
+		camposSelectBuilder.deleteCharAt(camposSelectBuilder.length()-4);
+		
+		return camposSelectBuilder.toString();
+		
+	}
+	
 	public String crearAvgMaxMinUltimos6aLoBruto() {
 //		excluye ID_cliente 
 //		excluye periodo

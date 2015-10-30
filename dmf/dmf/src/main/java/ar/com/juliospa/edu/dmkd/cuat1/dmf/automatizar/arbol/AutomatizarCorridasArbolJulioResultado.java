@@ -1,7 +1,14 @@
 package ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Date;
+import java.util.List;
+
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.model.NodoResultadoTablaNormalizada;
 
 public class AutomatizarCorridasArbolJulioResultado {
 
@@ -11,19 +18,83 @@ public class AutomatizarCorridasArbolJulioResultado {
 	private Date tiempoFinEjecucion;
 	private Date tiempoFin;
 	
+	
 	private AutomatizarCorridasArbolJulioConfig configuracionArbol;
+	private List<NodoResultadoTablaNormalizada> nodosResultantes;
+	
+	public String persistime(){
+		StringBuilder build = new StringBuilder();
+		build.append(getInformacion());
+		
+		String persistName = configuracionArbol.getOutputFolder()+configuracionArbol.getTimeStampFolder()+"/resumen_ejecucion.txt";
+		
+		try {
+			Files.write(Paths.get(persistName), build.toString().getBytes());
+		} catch (IOException e) {
+			System.out.println("error al persistir");
+			System.out.println(build);
+			e.printStackTrace();
+		}
+		return persistName;
+	}
+	
+	
+	public BigDecimal getGananciaTotalNodos(Long costo, Long ganancia, Double normalizador) {
+		BigDecimal acumulado = new BigDecimal("0");
+		if (nodosResultantes != null && nodosResultantes.size() > 0) {
+			
+			
+			for (NodoResultadoTablaNormalizada nodo : nodosResultantes) {
+				acumulado = acumulado.add( nodo.cuentaValor(costo, ganancia, normalizador) );
+			}
+		}
+		return acumulado;
+	}
+	
+	
+	public String getValoresNodos(){
+		StringBuilder build = new StringBuilder();
+		
+		if (nodosResultantes != null && nodosResultantes.size() > 0) {
+			build.append(NodoResultadoTablaNormalizada.nodoCsvNombreColumnas()).append(System.getProperty("line.separator"));
+			for (NodoResultadoTablaNormalizada nodo : nodosResultantes) {
+				build.append(nodo.nodoCsvValoresColumnas()).append(System.getProperty("line.separator"));
+			}
+		}else{
+			build.append("No se encontraron nodos resultantes.").append(System.getProperty("line.separator"));
+		}
+		return build.toString();
+	}
+	
+	public String getGananciasNodos(Long costo, Long ganancia, Double normalizador) {
+		StringBuilder build = new StringBuilder();
+		
+		if (nodosResultantes != null && nodosResultantes.size() > 0) {
+			build.append(NodoResultadoTablaNormalizada.nodoCsvGananciaNombreColumnas()).append(System.getProperty("line.separator"));
+			for (NodoResultadoTablaNormalizada nodo : nodosResultantes) {
+				build.append(nodo.nodoCsvGananciaColumnas(costo, ganancia, normalizador)).append(System.getProperty("line.separator"));
+			}
+		}else{
+			build.append("No se encontraron nodos resultantes.").append(System.getProperty("line.separator"));
+		}
+		return build.toString();
+	}
+
 
 	
 	public AutomatizarCorridasArbolJulioResultado(AutomatizarCorridasArbolJulioConfig configuracionArbol) {
 		tiempoInicio = new Date();
 		this.configuracionArbol = configuracionArbol;
+		
+
+		
 	}
 	
 	public String getInformacion(){
 		StringBuilder build = new StringBuilder();
 		build.append("Resumen Resultados: ").append(System.getProperty("line.separator"));
 		final String separator = "\t";
-		Field[] campos = AutomatizarCorridasArbolJulioConfig.class.getFields() ;
+		Field[] campos = AutomatizarCorridasArbolJulioConfig.class.getDeclaredFields() ;
 		
 		for (Field field : campos) {
 			field.setAccessible(true);
@@ -38,6 +109,14 @@ public class AutomatizarCorridasArbolJulioResultado {
 			}
 		}
 		build.append(configuracionArbol.getInformacionConfiguracion());
+		build.append("Ganancia total Nodos: ").append(separator).append(getGananciaTotalNodos(configuracionArbol.getCosto(), configuracionArbol.getGanancia(), configuracionArbol.getNormalizador())).append(System.getProperty("line.separator"));
+		build.append("Resumen Nodos: ").append(System.getProperty("line.separator"));
+		build.append(getGananciasNodos(configuracionArbol.getCosto(), configuracionArbol.getGanancia(), configuracionArbol.getNormalizador()));
+		build.append("Valores Nodos: ").append(System.getProperty("line.separator"));
+		build.append(getValoresNodos());
+		
+
+
 		
 		
 		return build.toString();
@@ -81,5 +160,17 @@ public class AutomatizarCorridasArbolJulioResultado {
 
 	public void setConfiguracionArbol(AutomatizarCorridasArbolJulioConfig configuracionArbol) {
 		this.configuracionArbol = configuracionArbol;
+	}
+
+
+
+	public List<NodoResultadoTablaNormalizada> getNodosResultantes() {
+		return nodosResultantes;
+	}
+
+
+
+	public void setNodosResultantes(List<NodoResultadoTablaNormalizada> nodosResultantes) {
+		this.nodosResultantes = nodosResultantes;
 	}
 }

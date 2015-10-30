@@ -3,6 +3,11 @@ package ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol;
 import java.lang.reflect.Field;
 
 public class AutomatizarCorridasArbolJulioConfig {
+	
+	private Long costo;
+	private Long ganancia;
+	private Double normalizador;
+	
 	private String origenDatosSav; 
 	private String outputFolder;
 	private String seed= "12345";
@@ -11,9 +16,23 @@ public class AutomatizarCorridasArbolJulioConfig {
 	private Integer minParentSize = 350;
 	private Integer minChildSize = 245;
 	
+	private String timeStampFolder; 
+	
 	public AutomatizarCorridasArbolJulioConfig() {}
 	
-	public AutomatizarCorridasArbolJulioConfig(String origenDatosSav, String outputFolder, String seed, String tipoArbol, Integer maximaProfundidad, Integer minParentSize, Integer minChildSize) {
+	/**
+	 * @param origenDatosSav
+	 * @param outputFolder
+	 * @param seed
+	 * @param tipoArbol
+	 * @param maximaProfundidad
+	 * @param minParentSize
+	 * @param minChildSize
+	 * @param costo
+	 * @param ganancia
+	 * @param normalizador
+	 */
+	public AutomatizarCorridasArbolJulioConfig(String origenDatosSav, String outputFolder, String seed, String tipoArbol, Integer maximaProfundidad, Integer minParentSize, Integer minChildSize, Long costo,Long ganancia, Double normalizador) {
 		this.origenDatosSav = origenDatosSav;
 		this.outputFolder = outputFolder;
 		this.seed = seed;
@@ -21,13 +40,16 @@ public class AutomatizarCorridasArbolJulioConfig {
 		this.maximaProfundidad = maximaProfundidad;
 		this.minParentSize = minParentSize;
 		this.minChildSize = minChildSize;
+		this.costo = costo;
+		this.ganancia = ganancia;
+		this.normalizador = normalizador;
 	}
 	
 	public String getInformacionConfiguracion(){
 		StringBuilder build = new StringBuilder();
 		build.append("Resumen configuracion ejecucion: ").append(System.getProperty("line.separator"));
 		final String separator = "\t";
-		Field[] campos = AutomatizarCorridasArbolJulioConfig.class.getFields() ;
+		Field[] campos = AutomatizarCorridasArbolJulioConfig.class.getDeclaredFields() ;
 		
 		for (Field field : campos) {
 			field.setAccessible(true);
@@ -83,5 +105,37 @@ public class AutomatizarCorridasArbolJulioConfig {
 	}
 	public void setMinChildSize(Integer minChildSize) {
 		this.minChildSize = minChildSize;
+	}
+
+	public String getTimeStampFolder() {
+		return timeStampFolder;
+	}
+
+	public void setTimeStampFolder(String timeStampFolder) {
+		this.timeStampFolder = timeStampFolder;
+	}
+
+	public Long getCosto() {
+		return costo;
+	}
+
+	public void setCosto(Long costo) {
+		this.costo = costo;
+	}
+
+	public Long getGanancia() {
+		return ganancia;
+	}
+
+	public void setGanancia(Long ganancia) {
+		this.ganancia = ganancia;
+	}
+
+	public Double getNormalizador() {
+		return normalizador;
+	}
+
+	public void setNormalizador(Double normalizador) {
+		this.normalizador = normalizador;
 	}
 }

@@ -1,5 +1,7 @@
 package ar.com.juliospa.edu.dmkd.cuat1.dmf.model;
 
+import java.math.BigDecimal;
+
 
 //muestra	nodo	BAJA+1N	BAJA+1Porcentaje	BAJA+2N	BAJA+2Porcentaje	CONTINUAN	CONTINUAPorcentaje	TotalN	TotalPorcentaje	Categoría pronosticada	Nodo parental	VIPVariable	VIPSig	VIPChi-cuadrado	VIPgl	VIPValores_de_segmentacion
 
@@ -31,6 +33,39 @@ public class NodoResultadoTablaNormalizada {
 		return muestra + " - " +nodo;
 	}
 	
+	public static String nodoCsvNombreColumnas() {
+		String result = "muestra\tnodo\tbaja1num\tbaja1porc\tbaja2num\tbaja2porc\tcontNum\tcontPorc\ttotalNum\ttotalPorc\tcategoriaPronisticada\tNndoParental\tvipVariable\tvipSig\tvipChi\tvipGl\tvipValoresSegmentacion";
+		return result;
+	}
+	
+	public String nodoCsvValoresColumnas() {
+//		BigDecimal valorFinal = new BigDecimal( ( (ganancia-costo) * baja2num  - costo * ( baja1num + contNum )) / normalizador ); 
+		String result = muestra+"\t"+nodo+"\t"+baja1num+"\t"+baja1porc+"\t"+baja2num+"\t"+baja2porc+"\t"+contNum+"\t"+contPorc+"\t"+totalNum+"\t"+totalPorc+"\t"+categoriaPronisticada+"\t"+NndoParental+"\t"+vipVariable+"\t"+vipSig+"\t"+vipChi+"\t"+vipGl+"\t"+vipValoresSegmentacion;
+		return result;
+	}
+	public static String nodoCsvGananciaNombreColumnas() {
+		String result = "ganancia\tcosto\tbaja2num\tcosto\tbaja1num\tcontNum\tnormalizador\tvalorFinal";
+		return result;
+	}
+	public String nodoCsvGananciaColumnas(Long costo, Long ganancia, Double normalizador) {
+		BigDecimal valorFinal = new BigDecimal( ( (ganancia-costo) * baja2num  - costo * ( baja1num + contNum )) / normalizador ); 
+		String result = ganancia +"\t"+ costo+"\t"+ baja2num +"\t"+ costo +"\t"+ baja1num +"\t"+contNum+"\t"+ normalizador +"\t"+ valorFinal.toPlainString();
+		return result;
+	}
+	
+	public BigDecimal cuentaValor(Long costo, Long ganancia, Double normalizador) {
+		BigDecimal valorFinal = new BigDecimal( ( (ganancia-costo) * baja2num  - costo * ( baja1num + contNum )) / normalizador );
+		return valorFinal;
+	}
+	
+	public String cuentaEscrita(Long costo, Long ganancia, Double normalizador) {
+		
+		BigDecimal valorFinal = new BigDecimal( ( (ganancia-costo) * baja2num  - costo * ( baja1num + contNum )) / normalizador ); 
+		
+		String result = "( (" + ganancia+ " - " + costo+ " ) * " + baja2num +" - " + costo +" * ( " +baja1num +" + " +contNum+" )) / " + normalizador + " = " + valorFinal.toPlainString();
+		return result;
+	}
+	
 	public NodoResultadoTablaNormalizada(String[] aLinea) throws Exception {
 		if (aLinea.length != 17 && aLinea.length != 11 ) {
 			throw new Exception("cantidad de columnas invalida: "+aLinea.length);
@@ -46,7 +81,7 @@ public class NodoResultadoTablaNormalizada {
 		totalNum=Long.parseLong(aLinea[8].trim());
 		totalPorc=Double.parseDouble(aLinea[9].trim().replace("%", "").replace(",", "."));
 		categoriaPronisticada=aLinea[10].trim();
-		if (aLinea.length != 11 ) {
+		if (aLinea.length != 11 && !aLinea[11].contains("&nbsp;") ) {
 			NndoParental=Long.parseLong(aLinea[11].trim());
 			vipVariable=aLinea[12].trim();
 			vipSig=Double.parseDouble(aLinea[13].trim().replace("%", "").replace(",", "."));
