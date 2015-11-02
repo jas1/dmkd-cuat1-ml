@@ -119,6 +119,76 @@ public class AutomatizarCorridasArbolTest {
 	}
 	
 	@Test
+	public void pruebaEjecucionSpssArbolVersionJulioSinEjecucionTrainTestHistoria() {
+		
+//		configuracion corrida
+		String outFolder = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/";
+		String origenDatos = "C:/Users/julio/Desktop/dmf_wd/db_outfile/historico_Base_2.sav";
+		String seed= "12345";
+		String tipoArbol = "CHAID";
+		Integer maximaProfundidad = 6;
+		Integer minParentSize = 350;
+		Integer minChildSize = 245;
+		Long ganancia = 8000L;
+		Long costo = 200L;
+		// por el 30%
+		double normalizador = 0.3;
+		
+		AutomatizarCorridasArbolJulioConfig configArbol = new AutomatizarCorridasArbolJulioConfig();
+		configArbol.setSeed(seed);
+		configArbol.setOrigenDatosSav(origenDatos);
+		configArbol.setTipoArbol(tipoArbol);
+		configArbol.setOutputFolder(outFolder);
+		configArbol.setMaximaProfundidad(maximaProfundidad);
+		configArbol.setMinChildSize(minChildSize);
+		configArbol.setMinParentSize(minParentSize);
+		configArbol.setGanancia(ganancia);
+		configArbol.setCosto(costo);
+		configArbol.setNormalizador(normalizador);
+		
+		configArbol.setTimeStampFolder("20151101_224259");
+		
+		AutomatizarCorridasArbolJulioResultado result = AutomatizarCorridasArbolJulio.parseResultadoTrainTest(configArbol);
+		
+		System.out.println(result.persistime());
+		
+	}
+	
+	@Test
+	public void pruebaEjecucionSpssArbolVersionJulioTrainTestHistoriaBase() {
+		
+//		configuracion corrida
+		String outFolder = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/";
+		String origenDatos = "C:/Users/julio/Desktop/dmf_wd/db_outfile/historico_Base_2.sav";
+		String seed= "12345";
+		String tipoArbol = "CHAID";
+		Integer maximaProfundidad = 6;
+		Integer minParentSize = 350;
+		Integer minChildSize = 245;
+		Long ganancia = 8000L;
+		Long costo = 200L;
+		// por el 30%
+		double normalizador = 0.3;
+		
+		AutomatizarCorridasArbolJulioConfig configArbol = new AutomatizarCorridasArbolJulioConfig();
+		configArbol.setSeed(seed);
+		configArbol.setOrigenDatosSav(origenDatos);
+		configArbol.setTipoArbol(tipoArbol);
+		configArbol.setOutputFolder(outFolder);
+		configArbol.setMaximaProfundidad(maximaProfundidad);
+		configArbol.setMinChildSize(minChildSize);
+		configArbol.setMinParentSize(minParentSize);
+		configArbol.setGanancia(ganancia);
+		configArbol.setCosto(costo);
+		configArbol.setNormalizador(normalizador);
+				
+		AutomatizarCorridasArbolJulioResultado result = AutomatizarCorridasArbolJulio.ejecucionArbol7030historia(configArbol);
+		
+		System.out.println(result.persistime());
+		
+	}
+	
+	@Test
 	public void pruebaEjecucionSpssArbolVersionJulio() {
 		
 //		configuracion corrida

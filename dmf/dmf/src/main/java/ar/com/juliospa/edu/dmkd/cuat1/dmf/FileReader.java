@@ -35,6 +35,26 @@ public class FileReader {
 		return sample;
 	}
 	
+	public static StringBuilder empiezaConBuilder(String aPath,String empiezaCon,String separator) {
+		StringBuilder build = new StringBuilder(); 
+		try (Stream<String> lines = Files.lines(Paths.get(aPath), Charset.defaultCharset())) {
+			  lines.forEachOrdered(line -> devolverColumasEmpiezanCon(line,empiezaCon,build,separator));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return build;
+	}
+	
+	private static void devolverColumasEmpiezanCon(String line, String empiezaCon, StringBuilder build, String separator) {
+		String[] split = line.split("\t");
+		for (String string : split) {
+			if (string.trim().startsWith(empiezaCon)) {
+				build.append(string.trim()).append(separator);
+			}
+		}
+	}
+
 	public static String empiezaCon(String aPath,String empiezaCon) {
 		String sample = "";
 		try (Stream<String> lines = Files.lines(Paths.get(aPath), Charset.defaultCharset())) {

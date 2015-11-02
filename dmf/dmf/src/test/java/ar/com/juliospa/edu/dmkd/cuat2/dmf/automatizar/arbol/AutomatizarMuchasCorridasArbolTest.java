@@ -17,6 +17,21 @@ import ar.com.juliospa.edu.dmkd.cuat1.dmf.model.NodoResultadoTablaNormalizada;
  */
 public class AutomatizarMuchasCorridasArbolTest {
 
+	@Test
+	public void testCampso() {
+		
+		for (int i = 1; i <= 37; i++) {
+			if (i % 5 == 0) {
+				System.out.println("campos"+i+", ");
+			}else{
+				System.out.print("campos"+i+", ");
+			}
+			
+		}
+		
+		
+	}
+	
 	/**
 	 */
 	@Test
@@ -45,7 +60,7 @@ public class AutomatizarMuchasCorridasArbolTest {
 	
 	@Test
 	public void pruebaVariacionParametrosBasicosParaVerMejoresCombinacionesAnalisisCarpeta() {
-		String outFolder = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/paramsBase/";
+		String outFolder = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/paramsBase-v2/";
 		System.out.println(AutomatizarCorridasArbolJulioExplorandoParametrosBase.analizarResultados(outFolder));
 	}
 	
