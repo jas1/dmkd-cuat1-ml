@@ -1,11 +1,18 @@
 package ar.com.juliospa.edu.dmkd.cuat1.dmf;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import org.junit.Test;
 
@@ -21,7 +28,63 @@ import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasA
  */
 public class CaracterizacionRHelper {
 
-	@Test	
+	
+	@Test
+	public void buscarTranspuesto() {
+		
+		String fileStr = "C:/Users/jspairani/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/TP_DMF/varianza_transpuesta.txt";
+		StringBuilder build = new StringBuilder();
+		
+		List<String> lines;
+		try {
+			lines = Files.readAllLines(Paths.get(fileStr), Charset.defaultCharset());
+			Map <String,Integer> mapa = new HashMap<String, Integer>();
+			for (String string : lines) {
+				
+				String[] asdasd = string.split("\\|");
+				for (String key : asdasd) {
+					
+					if (!key.contains("NA")) {
+						Integer currentCount = mapa.get(key);
+						if (currentCount == null) {
+							currentCount=0;
+						}
+						currentCount++;
+						mapa.put(key, currentCount);						
+					}
+					
+
+					
+				}
+			
+			}
+			
+			/**
+			 * aca la idea es una vez que tengo las columnas sin varianza poro periodo , lo tengo 
+			 * lo tengo que ver cuales estan en todos los periodos
+			 */
+			for (String key : mapa.keySet()) {
+				System.out.println(key + "\t"+ mapa.get(key));
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+		
+//		try (Stream<String> lines = Files.lines(Paths.get(fileStr), Charset.defaultCharset())) {
+//			  lines.forEachOrdered(line -> devolverColumasEmpiezanCon(line,empiezaCon,build,separator));
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		
+	}
+	
+	@Test
 	public void genrarCosoColumno() {
 //		armarOutputR
 		
