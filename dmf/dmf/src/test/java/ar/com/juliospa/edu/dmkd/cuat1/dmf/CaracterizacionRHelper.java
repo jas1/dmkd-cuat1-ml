@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,8 @@ public class CaracterizacionRHelper {
 	@Test
 	public void buscarTranspuesto() {
 		
-		String fileStr = "C:/Users/jspairani/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/TP_DMF/varianza_transpuesta.txt";
+		String fileStr = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/TP_DMF/varianza_transpuesta.txt";
+//		String fileStr = "C:/Users/jspairani/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/TP_DMF/varianza_transpuesta.txt";
 		StringBuilder build = new StringBuilder();
 		
 		List<String> lines;
@@ -63,10 +65,20 @@ public class CaracterizacionRHelper {
 			 * aca la idea es una vez que tengo las columnas sin varianza poro periodo , lo tengo 
 			 * lo tengo que ver cuales estan en todos los periodos
 			 */
+			List<String> resto = new ArrayList<String>();
 			for (String key : mapa.keySet()) {
-				System.out.println(key + "\t"+ mapa.get(key));
+				if (mapa.get(key) == 27) {
+					System.out.println(key + "\t"+ mapa.get(key));	
+				}else{
+					resto.add(key + "\t"+ mapa.get(key));
+					
+				}
 			}
 
+			for (String string : resto) {
+				System.out.println(string);
+			}
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
