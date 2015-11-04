@@ -1,6 +1,7 @@
 package ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 public class AutomatizarCorridasArbolJulioConfig {
 	
@@ -56,7 +57,18 @@ public class AutomatizarCorridasArbolJulioConfig {
 		for (Field field : campos) {
 			field.setAccessible(true);
 			try {
-				build.append(field.getName()).append(separator).append(field.get(this)).append(System.getProperty("line.separator"));
+				if (field.getType().isArray() ) {
+					Object currentValue = field.get(this); 
+					if (currentValue instanceof String[]) {
+						build.append(field.getName()).append(separator).append(Arrays.toString((String[])field.get(this))).append(System.getProperty("line.separator"));						
+					}else{
+						build.append(field.getName()).append(separator).append("array de algo").append(field.get(this)).append(System.getProperty("line.separator"));
+					}
+					
+	
+				}else{
+					build.append(field.getName()).append(separator).append(field.get(this)).append(System.getProperty("line.separator"));	
+				}
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {

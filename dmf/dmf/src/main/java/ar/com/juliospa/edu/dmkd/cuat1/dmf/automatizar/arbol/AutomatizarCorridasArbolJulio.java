@@ -42,10 +42,8 @@ public class AutomatizarCorridasArbolJulio {
 	private static final String TRAINING = "Training";
 
 
+	public static AutomatizarCorridasArbolJulioResultado ejecucionArbolVersionParametrizadoArbolNoVarParaPaq1(AutomatizarCorridasArbolJulioConfig configArbol,String[] commands) {
 
-	
-	public static AutomatizarCorridasArbolJulioResultado ejecucionArbolVersionParametrizadoArbolNoVarParaPaq1(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String[] commands= comandoArbolVersionParametrizadoArbolNoVarParaPaq1(configArbol);
 		configArbol.setComandoSPSS(commands);
 		
 		AutomatizarCorridasArbolJulioResultado resultado = new AutomatizarCorridasArbolJulioResultado(configArbol);
@@ -65,6 +63,107 @@ public class AutomatizarCorridasArbolJulio {
 		resultado.setTiempoFin(new Date());
 		return resultado ;
 	}
+	
+
+	public static AutomatizarCorridasArbolJulioResultado ejecucionArbol(AutomatizarCorridasArbolJulioConfig configArbol,String[] commands,ParseNodosType tipo) {
+
+		configArbol.setComandoSPSS(commands);
+		
+		AutomatizarCorridasArbolJulioResultado resultado = new AutomatizarCorridasArbolJulioResultado(configArbol);
+		resultado.setTiempoInicioEjecucion(new Date());
+		ejecutarComandosSpss(commands);
+		resultado.setTiempoFinEjecucion(new Date());
+		
+		List<NodoResultadoTablaNormalizada> nodosArbol = null;
+		try {
+			switch (tipo) {
+				case DEFAULT: getElementsForArbolDefault(configArbol);break;
+				case TRAINTEST7030: nodosArbol = getElementsForArbolTrainTest(configArbol);break;
+	
+				default: throw new Exception("No Implementado este tipo de Parseo de elementos");
+			}
+			
+			resultado.setNodosResultantes(nodosArbol);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		resultado.setTiempoFin(new Date());
+		return resultado ;
+	}
+	
+	public static AutomatizarCorridasArbolJulioResultado ejecucionArbolVersionParametrizadoArbolNoVarParaPaq1(AutomatizarCorridasArbolJulioConfig configArbol) {
+//		String[] commands= comandoArbolVersionParametrizadoArbolNoVarParaPaq1(configArbol);
+		String[] commands= comandoArbolVersionParametrizadoArbolNoVarParaPaq1Mezclado(configArbol);
+		configArbol.setComandoSPSS(commands);
+		
+		AutomatizarCorridasArbolJulioResultado resultado = new AutomatizarCorridasArbolJulioResultado(configArbol);
+		resultado.setTiempoInicioEjecucion(new Date());
+		ejecutarComandosSpss(commands);
+		resultado.setTiempoFinEjecucion(new Date());
+		
+		List<NodoResultadoTablaNormalizada> nodosArbol;
+		try {
+			nodosArbol = getElementsForArbolTrainTest(configArbol);
+			resultado.setNodosResultantes(nodosArbol);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		resultado.setTiempoFin(new Date());
+		return resultado ;
+	}
+	
+	public static String[] comandoArbolVersionParametrizadoArbolNoVarParaPaq1Mezclado(AutomatizarCorridasArbolJulioConfig configArbol ){
+
+		String timeStamp = getTimeStamp(null,null);
+		configArbol.setTimeStampFolder(timeStamp);
+		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
+		File carpetaOut = new File(carpetaOutput);
+		if (carpetaOut.mkdirs()) {
+			String fileXmlTest = carpetaOutput+"/"+"_test_model.xml";
+			String fileXmlTrain = carpetaOutput+"/"+"_train_model.xml";
+			String fileSql = carpetaOutput+"/"+"_reglas.sql";
+			String outFileName = carpetaOutput+"/"+"output.html";
+			String inputFile = configArbol.getOrigenDatosSav();
+			
+			String[] result = {
+				"OMS",
+                "/DESTINATION FORMAT=HTML OUTFILE='"+outFileName+"'.",
+				"GET",
+				"FILE='"+inputFile+"'.",
+				"DATASET NAME DataSet1 WINDOW=FRONT.",
+				"SET SEED="+configArbol.getSeed()+".",
+				"* Decision Tree.",
+				"TREE clase [n] BY numero_de_cliente [s] marketing_activo_ultimos90dias [n] cliente_vip [n] cliente_sucursal [s] cliente_edad [s] cliente_antiguedad [s] mrentabilidad [s] mrentabilidad_annual [s] mcomisiones [s] mactivos_margen [s] mpasivos_margen [s] marketing_coss_selling [n] tpaquete2 [n] tpaquete4 [n] tpaquete6 [n] tpaquete7 [n] tpaquete9 [n] tcuentas [n] tcuenta_corriente [n] mcuenta_corriente_Nopaquete [s] mcuenta_corriente_Paquete [s] mcuenta_corriente_dolares [s] tcaja_ahorro [n]",
+				"mcaja_ahorro_Paquete [s] mcaja_ahorro_Nopaquete [s] mcaja_ahorro_dolares [s] mdescubierto_preacordado [n] mcuentas_saldo [s] ttarjeta_debito [n] ctarjeta_debito_transacciones [s] mautoservicio [s] ttarjeta_visa [n] ctarjeta_visa_transacciones [s] mtarjeta_visa_consumo [s] ttarjeta_master [n] ctarjeta_master_transacciones [s] mtarjeta_master_consumo [s] cprestamos_personales [s] mprestamos_personales [s] cprestamos_prendarios [n] mprestamos_prendarios [s] cprestamos_hipotecarios [n] mprestamos_hipotecarios",
+				"[s] tplazo_fijo [n] mplazo_fijo_dolares [s] mplazo_fijo_pesos [s] tfondos_comunes_inversion [n] mfondos_comunes_inversion_pesos [s] mfondos_comunes_inversion_dolares [s] ttitulos [n] mtitulos [s] tseguro_vida_mercado_abierto [n] tseguro_auto [n] tseguro_vivienda [n] tseguro_accidentes_personales [n] tcaja_seguridad [n] tplan_sueldo [n] mplan_sueldo [s] mplan_sueldo_manual [s] cplan_sueldo_transaccion [n] tcuenta_debitos_automaticos [n] mcuenta_debitos_automaticos [s] ttarjeta_visa_debitos_automaticos [n]",
+				"mttarjeta_visa_debitos_automaticos [s] ttarjeta_master_debitos_automaticos [n] mttarjeta_master_debitos_automaticos [s] tpagodeservicios [n] mpagodeservicios [s] tpagomiscuentas [n] mpagomiscuentas [s] ccajeros_propios_descuentos [s] mcajeros_propios_descuentos [s] ctarjeta_visa_descuentos [s] mtarjeta_visa_descuentos [s] ctarjeta_master_descuentos [s] mtarjeta_master_descuentos [s] ccomisiones_mantenimiento [n] mcomisiones_mantenimiento [n] ccomisiones_otras [s] mcomisiones_otras [s] tcambio_monedas [n]",
+				"ccambio_monedas_compra [n] mcambio_monedas_compra [s] ccambio_monedas_venta [n] mcambio_monedas_venta [s] ctransferencias_recibidas [n] mtransferencias_recibidas [s] ctransferencias_emitidas [s] mtransferencias_emitidas [s] cextraccion_autoservicio [s] mextraccion_autoservicio [s] ccheques_depositados [s] mcheques_depositados [s] ccheques_emitidos [s] mcheques_emitidos [s] ccheques_depositados_rechazados [n] mcheques_depositados_rechazados [s] ccheques_emitidos_rechazados [s] mcheques_emitidos_rechazados",
+				"[s] tcallcenter [n] ccallcenter_transacciones [s] thomebanking [n] chomebanking_transacciones [s] tautoservicio [n] cautoservicio_transacciones [s] tcajas [n] tcajas_consultas [n] tcajas_depositos [n] tcajas_extracciones [n] tcajas_otras [n] ccajeros_propio_transacciones [s] mcajeros_propio [s] ccajeros_ajenos_transacciones [s] mcajeros_ajenos [s] tmovimientos_ultimos90dias [n] Master_marca_atraso [n] Master_cuenta_estado [n] Master_mfinanciacion_limite [n] Master_Fvencimiento [n] Master_Finiciomora [n]",
+				"Master_msaldototal [n] Master_msaldopesos [n] Master_msaldodolares [n] Master_mconsumospesos [n] Master_mconsumosdolares [n] Master_mlimitecompra [n] Master_madelantopesos [n] Master_madelantodolares [n] Master_fultimo_cierre [n] Master_mpagado [n] Master_mpagospesos [n] Master_mpagosdolares [n] Master_fechaalta [n] Master_mconsumototal [n] Master_tconsumos [n] Master_tadelantosefectivo [n] Master_mpagominimo [n] Visa_marca_atraso [n] Visa_cuenta_estado [n] Visa_mfinanciacion_limite [n] Visa_Fvencimiento",
+				"[n] Visa_Finiciomora [n] Visa_msaldototal [n] Visa_msaldopesos [n] Visa_msaldodolares [n] Visa_mconsumospesos [n] Visa_mconsumosdolares [n] Visa_mlimitecompra [n] Visa_madelantopesos [n] Visa_madelantodolares [n] Visa_fultimo_cierre [n] Visa_mpagado [n] Visa_mpagospesos [n] Visa_mpagosdolares [n] Visa_fechaalta [n] Visa_mconsumototal [n] Visa_tconsumos [n] Visa_tadelantosefectivo [n] Visa_mpagominimo [n] participa [n]",
+				"/TREE DISPLAY=TOPDOWN NODES=STATISTICS BRANCHSTATISTICS=YES NODEDEFS=YES SCALE=AUTO",
+				"/DEPCATEGORIES USEVALUES=[VALID]",
+				"/PRINT MODELSUMMARY CLASSIFICATION RISK CATEGORYSPECS TREETABLE",
+				"/RULES NODES=TERMINAL SYNTAX=SQL TYPE=SCORING OUTFILE='"+fileSql+"'",
+				"/SAVE NODEID PREDVAL PREDPROB",
+				"/METHOD TYPE="+configArbol.getTipoArbol(),
+				"/GROWTHLIMIT MAXDEPTH="+configArbol.getMaximaProfundidad()+" MINPARENTSIZE="+configArbol.getMinParentSize()+"  MINCHILDSIZE="+configArbol.getMinChildSize(),
+				"/VALIDATION TYPE=NONE OUTPUT=BOTHSAMPLES",
+				"/CHAID ALPHASPLIT=0.05 ALPHAMERGE=0.05 SPLITMERGED=NO CHISQUARE=PEARSON CONVERGE=0.001 MAXITERATIONS=100 ADJUST=BONFERRONI INTERVALS=10",
+				"/COSTS EQUAL",
+				"/OUTFILE TRAININGMODEL='"+fileXmlTrain+"' TESTMODEL='"+fileXmlTest+"'",
+				"/MISSING NOMINALMISSING=MISSING.",
+				"OMSEND."
+			};
+			return result;
+		}
+		throw new RuntimeException("no sepudo crear la carpeta: "+carpetaOutput);
+	}
+	
 	
 	public static String[] comandoArbolVersionParametrizadoArbolNoVarParaPaq1(AutomatizarCorridasArbolJulioConfig configArbol ){
 
@@ -429,12 +528,12 @@ public class AutomatizarCorridasArbolJulio {
 	 * @param configArbol
 	 * @return
 	 */
-	private static String[] comandoArbolDefault(AutomatizarCorridasArbolJulioConfig configArbol) {
+	public static String[] comandoArbolDefault(AutomatizarCorridasArbolJulioConfig configArbol) {
 		String timeStamp = getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 		File carpetaOut = new File(carpetaOutput);
-		if (carpetaOut.mkdir()) {
+		if (carpetaOut.mkdirs()) {
 			String outputXML = carpetaOutput+"/"+"model.xml";
 			String outputSQL = carpetaOutput+"/"+"reglas.sql";
 			String outFileName = carpetaOutput+"/"+"output.html";
@@ -480,7 +579,57 @@ public class AutomatizarCorridasArbolJulio {
 		}
 
 	}
+	public static String[] comandoArbolDefault2(AutomatizarCorridasArbolJulioConfig configArbol) {
+		String timeStamp = getTimeStamp(null,null);
+		configArbol.setTimeStampFolder(timeStamp);
+		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
+		File carpetaOut = new File(carpetaOutput);
+		if (carpetaOut.mkdirs()) {
+			String outputXML = carpetaOutput+"/"+"model.xml";
+			String outputSQL = carpetaOutput+"/"+"reglas.sql";
+			String outFileName = carpetaOutput+"/"+"output.html";
+			
+			String inputFile = configArbol.getOrigenDatosSav(); 
+			
+			String[] result = {
+					"OMS",
+	                "/DESTINATION FORMAT=HTML OUTFILE='"+outFileName+"'.",
+					"GET",
+					"FILE='"+inputFile+"'.",
+					"DATASET NAME DataSet1 WINDOW=FRONT.",
+					"SET SEED="+configArbol.getSeed()+".",
+					"* Decision Tree.",
+					"TREE clase [n] BY numero_de_cliente [s] marketing_activo_ultimos90dias [n] cliente_vip [n] cliente_sucursal [s] cliente_edad [s] cliente_antiguedad [s] mrentabilidad [s] mrentabilidad_annual [s] mcomisiones [s] mactivos_margen [s] mpasivos_margen [s] marketing_coss_selling [n] tpaquete2 [n] tpaquete4 [n] tpaquete6 [n] tpaquete7 [n] tpaquete9 [n] tcuentas [n] tcuenta_corriente [n] mcuenta_corriente_Nopaquete [s] mcuenta_corriente_Paquete [s] mcuenta_corriente_dolares [s] tcaja_ahorro [n]",
+					"mcaja_ahorro_Paquete [s] mcaja_ahorro_Nopaquete [s] mcaja_ahorro_dolares [s] mdescubierto_preacordado [n] mcuentas_saldo [s] ttarjeta_debito [n] ctarjeta_debito_transacciones [s] mautoservicio [s] ttarjeta_visa [n] ctarjeta_visa_transacciones [s] mtarjeta_visa_consumo [s] ttarjeta_master [n] ctarjeta_master_transacciones [s] mtarjeta_master_consumo [s] cprestamos_personales [s] mprestamos_personales [s] cprestamos_prendarios [n] mprestamos_prendarios [s] cprestamos_hipotecarios [n] mprestamos_hipotecarios",
+					"[s] tplazo_fijo [n] mplazo_fijo_dolares [s] mplazo_fijo_pesos [s] tfondos_comunes_inversion [n] mfondos_comunes_inversion_pesos [s] mfondos_comunes_inversion_dolares [s] ttitulos [n] mtitulos [s] tseguro_vida_mercado_abierto [n] tseguro_auto [n] tseguro_vivienda [n] tseguro_accidentes_personales [n] tcaja_seguridad [n] tplan_sueldo [n] mplan_sueldo [s] mplan_sueldo_manual [s] cplan_sueldo_transaccion [n] tcuenta_debitos_automaticos [n] mcuenta_debitos_automaticos [s] ttarjeta_visa_debitos_automaticos [n]",
+					"mttarjeta_visa_debitos_automaticos [s] ttarjeta_master_debitos_automaticos [n] mttarjeta_master_debitos_automaticos [s] tpagodeservicios [n] mpagodeservicios [s] tpagomiscuentas [n] mpagomiscuentas [s] ccajeros_propios_descuentos [s] mcajeros_propios_descuentos [s] ctarjeta_visa_descuentos [s] mtarjeta_visa_descuentos [s] ctarjeta_master_descuentos [s] mtarjeta_master_descuentos [s] ccomisiones_mantenimiento [n] mcomisiones_mantenimiento [n] ccomisiones_otras [s] mcomisiones_otras [s] tcambio_monedas [n]",
+					"ccambio_monedas_compra [n] mcambio_monedas_compra [s] ccambio_monedas_venta [n] mcambio_monedas_venta [s] ctransferencias_recibidas [n] mtransferencias_recibidas [s] ctransferencias_emitidas [s] mtransferencias_emitidas [s] cextraccion_autoservicio [s] mextraccion_autoservicio [s] ccheques_depositados [s] mcheques_depositados [s] ccheques_emitidos [s] mcheques_emitidos [s] ccheques_depositados_rechazados [n] mcheques_depositados_rechazados [s] ccheques_emitidos_rechazados [s] mcheques_emitidos_rechazados",
+					"[s] tcallcenter [n] ccallcenter_transacciones [s] thomebanking [n] chomebanking_transacciones [s] tautoservicio [n] cautoservicio_transacciones [s] tcajas [n] tcajas_consultas [n] tcajas_depositos [n] tcajas_extracciones [n] tcajas_otras [n] ccajeros_propio_transacciones [s] mcajeros_propio [s] ccajeros_ajenos_transacciones [s] mcajeros_ajenos [s] tmovimientos_ultimos90dias [n] Master_marca_atraso [n] Master_cuenta_estado [n] Master_mfinanciacion_limite [n] Master_Fvencimiento [n] Master_Finiciomora [n]",
+					"Master_msaldototal [n] Master_msaldopesos [n] Master_msaldodolares [n] Master_mconsumospesos [n] Master_mconsumosdolares [n] Master_mlimitecompra [n] Master_madelantopesos [n] Master_madelantodolares [n] Master_fultimo_cierre [n] Master_mpagado [n] Master_mpagospesos [n] Master_mpagosdolares [n] Master_fechaalta [n] Master_mconsumototal [n] Master_tconsumos [n] Master_tadelantosefectivo [n] Master_mpagominimo [n] Visa_marca_atraso [n] Visa_cuenta_estado [n] Visa_mfinanciacion_limite [n] Visa_Fvencimiento",
+					"[n] Visa_Finiciomora [n] Visa_msaldototal [n] Visa_msaldopesos [n] Visa_msaldodolares [n] Visa_mconsumospesos [n] Visa_mconsumosdolares [n] Visa_mlimitecompra [n] Visa_madelantopesos [n] Visa_madelantodolares [n] Visa_fultimo_cierre [n] Visa_mpagado [n] Visa_mpagospesos [n] Visa_mpagosdolares [n] Visa_fechaalta [n] Visa_mconsumototal [n] Visa_tconsumos [n] Visa_tadelantosefectivo [n] Visa_mpagominimo [n] participa [n]",
+					"/TREE DISPLAY=TOPDOWN NODES=STATISTICS BRANCHSTATISTICS=YES NODEDEFS=YES SCALE=AUTO",
+					"/DEPCATEGORIES USEVALUES=[VALID]",
+					"/PRINT MODELSUMMARY CLASSIFICATION RISK CATEGORYSPECS TREETABLE",
+					"/RULES NODES=TERMINAL SYNTAX=SQL TYPE=SCORING OUTFILE='"+outputSQL+"'",
+					"/SAVE NODEID PREDVAL PREDPROB",
+					"/METHOD TYPE=CHAID",
+					"/GROWTHLIMIT MAXDEPTH=AUTO MINPARENTSIZE=100 MINCHILDSIZE=50",
+					"/VALIDATION TYPE=NONE OUTPUT=BOTHSAMPLES",
+					"/CHAID ALPHASPLIT=0.05 ALPHAMERGE=0.05 SPLITMERGED=NO CHISQUARE=PEARSON CONVERGE=0.001 MAXITERATIONS=100 ADJUST=BONFERRONI INTERVALS=10",
+					"/COSTS EQUAL",
+					"/OUTFILE TRAININGMODEL='"+outputXML+"'",
+					"/MISSING NOMINALMISSING=MISSING.",
+					"OMSEND."};
 
+			
+			return result;
+			
+		}else{
+			throw new RuntimeException("No se pudo crear la carpeta:"+ carpetaOut.getAbsolutePath());
+		}
+
+	}
+	
 	/**
 	 * @param configArbol
 	 */
