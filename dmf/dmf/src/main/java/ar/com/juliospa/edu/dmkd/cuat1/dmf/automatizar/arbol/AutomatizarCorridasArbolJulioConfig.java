@@ -16,6 +16,8 @@ public class AutomatizarCorridasArbolJulioConfig {
 	private Integer minParentSize = 350;
 	private Integer minChildSize = 245;
 	
+	private String[] comandoSPSS={""};
+	
 	private String timeStampFolder; 
 	
 	public AutomatizarCorridasArbolJulioConfig() {}
@@ -137,5 +139,13 @@ public class AutomatizarCorridasArbolJulioConfig {
 
 	public void setNormalizador(Double normalizador) {
 		this.normalizador = normalizador;
+	}
+
+	public String[] getComandoSPSS() {
+		return comandoSPSS;
+	}
+
+	public void setComandoSPSS(String[] comandoSPSS) {
+		this.comandoSPSS = comandoSPSS;
 	}
 }
