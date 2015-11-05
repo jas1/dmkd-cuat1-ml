@@ -115,8 +115,10 @@ public class AutomatizarCorridasArbolSinVarParaPaq1Test {
 	
 	@Test
 	public void testPruebaEjecucionSpss() {
-		String outFolder = "C:/Users/jspairani/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/corrida_var_p1_v3/";
-		String origenDatos = "C:/Users/jspairani/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/TP_DMF/dm_finanzas_201504_con_booleans_depurado-var-paquete.sav";
+//		String outFolder = "C:/Users/jspairani/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/corrida_var_p1_v3/";
+//		String origenDatos = "C:/Users/jspairani/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/TP_DMF/dm_finanzas_201504_con_booleans_depurado-var-paquete.sav";
+		String outFolder = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/corrida_var_p1_v4/";
+		String origenDatos = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/TP_DMF/dm_finanzas_201504_con_booleans_depurado-var-paquete.sav";
 
 //		estaria bueno que este metodo tire un resumen de todo
 //		por ahora solo genera todas las cosas, despues creo un metodo para parsear eso.
