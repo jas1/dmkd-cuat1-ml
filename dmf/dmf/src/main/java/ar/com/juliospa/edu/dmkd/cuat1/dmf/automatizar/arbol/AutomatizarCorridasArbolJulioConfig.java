@@ -17,6 +17,9 @@ public class AutomatizarCorridasArbolJulioConfig {
 	private Integer minParentSize = 350;
 	private Integer minChildSize = 245;
 	
+	// si variamos los dataset que se puedan variar las columnas
+	private String columnas;
+	
 	private String[] comandoSPSS={""};
 	
 	private String timeStampFolder; 
@@ -159,5 +162,13 @@ public class AutomatizarCorridasArbolJulioConfig {
 
 	public void setComandoSPSS(String[] comandoSPSS) {
 		this.comandoSPSS = comandoSPSS;
+	}
+
+	public String getColumnas() {
+		return columnas;
+	}
+
+	public void setColumnas(String columnas) {
+		this.columnas = columnas;
 	}
 }
