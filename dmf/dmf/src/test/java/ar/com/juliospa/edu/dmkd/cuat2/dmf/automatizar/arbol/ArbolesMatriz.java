@@ -75,13 +75,17 @@ public class ArbolesMatriz {
 	@Test
 	public void correrArbolesDiagonalPrincipal() {
 		
-		Integer[] maximaProfundidadList = { 6 };
-		Integer[] minParentSizeList = { 500 };
-		Integer[] minChildSizeList = { 90 };
+//		Integer[] maximaProfundidadList = { 6 };
+//		Integer[] minParentSizeList = { 500 };
+//		Integer[] minChildSizeList = { 90 };
+		
+		Integer[] maximaProfundidadList = { 7 };
+		Integer[] minParentSizeList = { 350 };
+		Integer[] minChildSizeList = { 245 };
 		
 		String[] seed = { "101723", "208403", "391661", "663552", "826668", "980641" };
 		
-		String outFolder = ArbolFileSources.userFolder+"/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/corrida_var_tarj_histo_v3/";
+		String outFolder = ArbolFileSources.userFolder+"/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/corrida_var_tarj_histo_v4/";
 		String origenDatos1 = ArbolFileSources.userFolder+"/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/TP_DMF/datasts_matriz_histo/"+ArbolFileSources.DM_FINANZAS_201411_TARJETAS_HISTO_AVG;
 		String origenDatos2 = ArbolFileSources.userFolder+"/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/TP_DMF/datasts_matriz_histo/"+ArbolFileSources.DM_FINANZAS_201412_TARJETAS_HISTO_AVG;
 		String origenDatos3 = ArbolFileSources.userFolder+"/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/TP_DMF/datasts_matriz_histo/"+ArbolFileSources.DM_FINANZAS_201501_TARJETAS_HISTO_AVG;
@@ -89,10 +93,22 @@ public class ArbolesMatriz {
 		String origenDatos5 = ArbolFileSources.userFolder+"/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/TP_DMF/datasts_matriz_histo/"+ArbolFileSources.DM_FINANZAS_201503_TARJETAS_HISTO_AVG;
 		String origenDatos6 = ArbolFileSources.userFolder+"/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/TP_DMF/datasts_matriz_histo/"+ArbolFileSources.DM_FINANZAS_201504_TARJETAS_HISTO_AVG;
 //		 origenDatos1, origenDatos2, origenDatos3, origenDatos4, origenDatos5,origenDatos6
-		String[] files = { origenDatos1, origenDatos2, origenDatos3 };
+		String[] files = { origenDatos1, origenDatos2, origenDatos3,origenDatos4, origenDatos5,origenDatos6 };
 		ArbolFileSources.complexCalc(maximaProfundidadList, minParentSizeList, minChildSizeList, seed,files);
 		AutomatizarCorridasArbolSinVarParaPaq1.ejecucionSpssIterativoTarjetaHistoAVG(outFolder, maximaProfundidadList,minParentSizeList,minChildSizeList,seed,files);
+		
 	}
+	
+	@Test
+	public void normalizarSalidaDiagonal() {
+//		String outFolder = ArbolFileSources.userFolder+"/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/corrida_var_tarj_histo_v3/expName_pr6_par500_child450-6-periodos";
+		String outFolder = ArbolFileSources.userFolder+"/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/corrida_var_tarj_histo_default";
+
+		AutomatizarCorridasArbolJulioExplorandoParametrosBase.analizarResultadosDeMultiSeed(outFolder);
+	}
+	
+	
+	
 	@Test
 	public void calculaCOmpl() {
 		Integer[] maximaProfundidadList = { 6 };
