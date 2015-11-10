@@ -269,50 +269,59 @@ public class AutomatizarCorridasArbolJulioExplorandoParametrosBase {
 		if (!outFolder.endsWith("/")) {
 			outFolder = outFolder + "/";
 		}
-
 		String persistName = outFolder + "resumenEjecuciones.txt";
 
 		File mainFolder = new File(outFolder);
-		File[] carpetasTimeStamp = mainFolder.listFiles();
-		StringBuilder build = new StringBuilder();
-		final String lineSep = LINE_SEP;
-//		origenDatosSav\toutputFolder\t
-		build.append("instante corrida\tseed\ttipoArbol\tmaximaProfundidad\tminParentSize\tminChildSize\ttimeStampFolder\tGanancia total Nodos").append(lineSep);
-		for (File folderTimestamp : carpetasTimeStamp) {
-			
-			if (folderTimestamp.isDirectory()) {
-				build.append(folderTimestamp.getName()).append(TAB);
-				// File[] archivosFolderTs = folderTimestamp.listFiles();
-				// archivo de resumen resultados =
-				String nombreArchivoResultados = folderTimestamp.getAbsolutePath() + System.getProperty("file.separator") + "resumen_ejecucion.txt";
-				File resultadosTS = new File(nombreArchivoResultados);
-				// si no existe lo dejo asentado
-				if (!resultadosTS.exists()) {
-					build.append("no existe archivo resultados").append(nombreArchivoResultados).append(lineSep);
-				} else {
-					// si existe levanto las lineas y voy agregando lo que me
-					// interesa
-					build.append(folderTimestamp.getName()).append(TAB);
+		if (mainFolder.isDirectory()) {
+			File[] carpetasTimeStamp = mainFolder.listFiles();
+			StringBuilder build = new StringBuilder();
+			final String lineSep = LINE_SEP;
+//			origenDatosSav\toutputFolder\t
+			build.append("instante corrida\tseed\ttipoArbol\tmaximaProfundidad\tminParentSize\tminChildSize\ttimeStampFolder\tGanancia total Nodos").append(lineSep);
+			try {
+				for (File folderTimestamp : carpetasTimeStamp) {
+					
+					if (folderTimestamp.isDirectory()) {
+						build.append(folderTimestamp.getName()).append(TAB);
+						// File[] archivosFolderTs = folderTimestamp.listFiles();
+						// archivo de resumen resultados =
+						String nombreArchivoResultados = folderTimestamp.getAbsolutePath() + System.getProperty("file.separator") + "resumen_ejecucion.txt";
+						File resultadosTS = new File(nombreArchivoResultados);
+						// si no existe lo dejo asentado
+						if (!resultadosTS.exists()) {
+							build.append("no existe archivo resultados").append(nombreArchivoResultados).append(lineSep);
+						} else {
+							// si existe levanto las lineas y voy agregando lo que me
+							// interesa
+							build.append(folderTimestamp.getName()).append(TAB);
 
-					try {
-						Files.lines(resultadosTS.toPath()).forEach(linea -> procesarLinea(linea, build));
-					} catch (IOException e) {
-						build.append(e.getMessage()).append(lineSep);
-						e.printStackTrace();
+							try {
+								Files.lines(resultadosTS.toPath()).forEach(linea -> procesarLinea(linea, build));
+							} catch (IOException e) {
+								build.append(e.getMessage()).append(lineSep);
+								e.printStackTrace();
+							}
+							build.append(lineSep);
+						}
 					}
-					build.append(lineSep);
+
 				}
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 
+			try {
+				Files.write(Paths.get(persistName), build.toString().getBytes());
+			} catch (IOException e) {
+				System.out.println("error al persistir");
+				System.out.println(build);
+				e.printStackTrace();
+			}
 		}
+		
 
-		try {
-			Files.write(Paths.get(persistName), build.toString().getBytes());
-		} catch (IOException e) {
-			System.out.println("error al persistir");
-			System.out.println(build);
-			e.printStackTrace();
-		}
+		
 		return persistName;
 
 	}

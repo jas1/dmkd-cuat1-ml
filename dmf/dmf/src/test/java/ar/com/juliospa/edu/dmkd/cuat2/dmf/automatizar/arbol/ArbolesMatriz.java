@@ -81,7 +81,7 @@ public class ArbolesMatriz {
 		
 		Integer[] maximaProfundidadList = { 7 };
 		Integer[] minParentSizeList = { 350 };
-		Integer[] minChildSizeList = { 245 };
+		Integer[] minChildSizeList = { 70 };
 		
 		String[] seed = { "101723", "208403", "391661", "663552", "826668", "980641" };
 		
@@ -102,8 +102,8 @@ public class ArbolesMatriz {
 	@Test
 	public void normalizarSalidaDiagonal() {
 //		String outFolder = ArbolFileSources.userFolder+"/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/corrida_var_tarj_histo_v3/expName_pr6_par500_child450-6-periodos";
-		String outFolder = ArbolFileSources.userFolder+"/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/corrida_var_tarj_histo_default";
-
+//		String outFolder = ArbolFileSources.userFolder+"/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/corrida_var_tarj_histo_default";
+		String outFolder = ArbolFileSources.userFolder+"/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/corrida_var_tarj_histo_v4/expName_pr7_par350_child245/";
 		AutomatizarCorridasArbolJulioExplorandoParametrosBase.analizarResultadosDeMultiSeed(outFolder);
 	}
 	
