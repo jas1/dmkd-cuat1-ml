@@ -3,13 +3,13 @@ package ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol;
 import org.junit.Assert;
 import org.junit.Test;
 
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AcumuladorComandosSpss;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulio;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioConfig;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioExplorandoParametrosBase;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioResultado;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolSinVarParaPaq1;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.ParseNodosType;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AcumuladorComandosSpss;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulio;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulioExplorandoParametrosBase;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolSinVarParaPaq1;
 
 /**
  * la idea de este es correr los arboles para la matriz

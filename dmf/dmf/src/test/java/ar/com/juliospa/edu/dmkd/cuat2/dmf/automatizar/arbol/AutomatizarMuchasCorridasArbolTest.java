@@ -2,7 +2,7 @@ package ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol;
 
 import org.junit.Test;
 
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioExplorandoParametrosBase;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulioExplorandoParametrosBase;
 
 /**
  * la idea de esta clase es testear las corridas grandes que son muchas y generan muchas carpetas

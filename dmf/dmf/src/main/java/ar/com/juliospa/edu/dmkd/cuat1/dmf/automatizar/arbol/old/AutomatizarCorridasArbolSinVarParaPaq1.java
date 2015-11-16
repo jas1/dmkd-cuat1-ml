@@ -1,4 +1,7 @@
-package ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol;
+package ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old;
+
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioConfig;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioResultado;
 
 public class AutomatizarCorridasArbolSinVarParaPaq1 {
 

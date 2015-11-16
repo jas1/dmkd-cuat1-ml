@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulio;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulio;
 
 /**
  * la idea de esta clase es : 

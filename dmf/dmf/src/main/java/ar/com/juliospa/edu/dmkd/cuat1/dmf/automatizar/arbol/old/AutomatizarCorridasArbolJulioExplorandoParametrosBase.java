@@ -1,4 +1,4 @@
-package ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol;
+package ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioConfig;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioResultado;
 
 /**
  * la idea de esta clase es la corrida de varios valores para luego poder

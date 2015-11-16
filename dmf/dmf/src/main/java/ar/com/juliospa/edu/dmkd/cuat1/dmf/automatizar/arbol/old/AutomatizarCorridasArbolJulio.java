@@ -1,4 +1,4 @@
-package ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol;
+package ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +15,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioConfig;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioResultado;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.ParseNodosType;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.model.NodoResultadoTablaNormalizada;
 
 import com.ibm.statistics.plugin.StatsException;

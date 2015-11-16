@@ -25,10 +25,23 @@ public abstract class ArbolFileSources {
 				
 		System.out.println("Current Complejidad: " + currentCompl );
 	}
-	public static void complexCalc(Integer[] maximaProfundidadList, Integer[] minParentSizeList, Integer[] minChildSizeList, String[] seed, String[] files) {
+	public static int complexCalc(Integer[] maximaProfundidadList, Integer[] minParentSizeList, Integer[] minChildSizeList, String[] seed, String[] files) {
 		int currentCompl = maximaProfundidadList.length * minParentSizeList.length * minChildSizeList.length * seed.length * files.length;
 		
-		System.out.println("Current Complejidad: " + currentCompl );		
+		System.out.println("Current Complejidad: " + currentCompl );
+		return currentCompl;
+	}
+	
+	public static int complexCalcConTiempo(Integer[] maximaProfundidadList, Integer[] minParentSizeList, Integer[] minChildSizeList, String[] seed, String[] files,int tiempoEstimadoPromedioCorridaArbolMinutos) {
+		int currentCompl = maximaProfundidadList.length * minParentSizeList.length * minChildSizeList.length * seed.length * files.length;
+		
+		System.out.println("Current Complejidad: " + currentCompl );
+		
+		int minutos = tiempoEstimadoPromedioCorridaArbolMinutos*currentCompl;
+		double horas = minutos / 60;
+		
+		System.out.println("tiempo estimado corrida: "+ minutos +" minutos => "+ horas + " horas");
+		return currentCompl;
 	}
 
 	

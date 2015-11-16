@@ -90,8 +90,21 @@ public class AutomatizarCorridasArbolJulioConfig {
 	public String getOutputFolder() {
 		return outputFolder;
 	}
+	
+	/* cabezoteada */
 	public void setOutputFolder(String outputFolder) {
-		this.outputFolder = outputFolder;
+		
+		if (outputFolder != null) {
+			if (!outputFolder.endsWith("/")) {
+				this.outputFolder = outputFolder+"/";	
+			}else{
+				this.outputFolder = outputFolder;
+			}
+		}else{
+			throw new RuntimeException( "no podes setearlo null !");
+		}
+		
+		
 	}
 	public String getSeed() {
 		return seed;
