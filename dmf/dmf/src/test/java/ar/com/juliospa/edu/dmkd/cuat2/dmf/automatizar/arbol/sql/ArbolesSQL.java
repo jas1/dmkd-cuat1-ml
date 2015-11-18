@@ -1,5 +1,9 @@
 package ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.sql;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,6 +15,7 @@ import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorri
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulioExplorandoParametrosBase;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.sql.AcumuladorComandosSpss;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.sql.ArbolesSQLEjecutador;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.sql.CamposSQLHelper;
 import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.ArbolFileSources;
 
 
@@ -141,5 +146,15 @@ public class ArbolesSQL {
 		
 	}
 	
+	@Test
+	public void testRandomCols() {
+		Map<String, String> tmp = CamposSQLHelper.getCamposAUsarRandom(50);
+		System.out.println(CamposSQLHelper.transformToSpssSql(tmp.keySet()));
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println(Arrays.asList(CamposSQLHelper.transformToSpssTreeFields(tmp.values())));
+		
+	}
 	
 }
