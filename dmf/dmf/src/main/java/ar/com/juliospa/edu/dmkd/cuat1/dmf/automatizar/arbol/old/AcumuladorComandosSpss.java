@@ -3,6 +3,7 @@ package ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old;
 import java.io.File;
 
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioConfig;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.UtilidadesGenerales;
 
 
 /**
@@ -18,7 +19,7 @@ public class AcumuladorComandosSpss {
 	 */
 	
 	public static String[] comandoArbolDefaultLevantadoSQL(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 		File carpetaOut = new File(carpetaOutput);
@@ -117,7 +118,7 @@ public class AcumuladorComandosSpss {
 	
 	
 	public static String[] comandoGenerarArchivosTarjetaHistoriaAVG(String aOutPut, String infilePathAndName) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		String outPut = aOutPut;
 		if (!outPut.endsWith("/")) {
 			outPut = outPut + "/";
@@ -441,7 +442,7 @@ public class AcumuladorComandosSpss {
 	 * @return
 	 */
 	public static String[] comandoArbolTarjetasHistoriaAVG(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
@@ -517,7 +518,7 @@ public class AcumuladorComandosSpss {
 	 * @return
 	 */
 	public static String[] comandoArbolTarjetas20151107(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
@@ -588,7 +589,7 @@ public class AcumuladorComandosSpss {
 	 * @return
 	 */
 	public static String[] comandoArbolBase20151107(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
@@ -651,7 +652,7 @@ public class AcumuladorComandosSpss {
 	
 	
 	public static String[] comandoArbolDefaultFixDelRawDeBaseFabiana(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 		File carpetaOut = new File(carpetaOutput);
@@ -710,7 +711,7 @@ public class AcumuladorComandosSpss {
 //    "Visa_fechaalta [n] Visa_mconsumototal [n] Visa_tconsumos [n] Visa_tadelantosefectivo [n] Visa_mpagominimo [n] participa [n]",
 	
 	public static String[] comandoArbolDefaultFixDelRawDeBase(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 		File carpetaOut = new File(carpetaOutput);
@@ -767,7 +768,7 @@ public class AcumuladorComandosSpss {
 	 */
 	@Deprecated
 	public static String[] comandoArbolDefault(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 		File carpetaOut = new File(carpetaOutput);
@@ -820,7 +821,7 @@ public class AcumuladorComandosSpss {
 
 	@Deprecated
 	public static String[] comandoArbolDefault2(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 		File carpetaOut = new File(carpetaOutput);
@@ -878,7 +879,7 @@ public class AcumuladorComandosSpss {
  */
 public static String[] comandoArbolVersionParametrizadoArbolNoChaidNoCampos(AutomatizarCorridasArbolJulioConfig configArbol ){
 
-	String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+	String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 	configArbol.setTimeStampFolder(timeStamp);
 	String campos = "numero_de_cliente [n] foto_mes [s] marketing_activo_ultimos90dias [n] cliente_vip [n] cliente_sucursal [s] cliente_edad [s] cliente_antiguedad [s] mrentabilidad [s] mrentabilidad_annual [n] mcomisiones [s] mactivos_margen [s] mpasivos_margen [s] marketing_coss_selling [n] tpaquete_premium [n] tpaquete2 [n] tpaquete3 [n] tpaquete4 [n] tpaquete5 [n] tpaquete6 [n] tpaquete7 [n] tpaquete8 [n] tpaquete9 [n] tcuentas [n] tcuenta_corriente [n] mcuenta_corriente_Nopaquete [s]"+
 	" mcuenta_corriente_Paquete [s] mcuenta_corriente_dolares [n] tcaja_ahorro [n] mcaja_ahorro_Paquete [s] mcaja_ahorro_Nopaquete [s] mcaja_ahorro_dolares [s] mdescubierto_preacordado [n] mcuentas_saldo [s] ttarjeta_debito [n] ctarjeta_debito_transacciones [s] mautoservicio [s] ttarjeta_visa [n] ctarjeta_visa_transacciones [s] mtarjeta_visa_consumo [s] ttarjeta_master [n] ctarjeta_master_transacciones [s] mtarjeta_master_consumo [s] cprestamos_personales [s] mprestamos_personales [s] cprestamos_prendarios [n]"+
@@ -938,7 +939,7 @@ public static String[] comandoArbolVersionParametrizadoArbolNoChaidNoCampos(Auto
 }
 public static String[] comandoArbolVersion7030Historia(AutomatizarCorridasArbolJulioConfig configArbol ){
 
-	String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+	String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 	configArbol.setTimeStampFolder(timeStamp);
 	String campos1 =" numero_de_cliente [s] foto_mes [s] marketing_activo_ultimos90dias [s] cliente_vip [s] cliente_sucursal [s] cliente_edad [s] cliente_antiguedad [s] mrentabilidad [s] mrentabilidad_annual [s] mcomisiones [s] mactivos_margen [s] mpasivos_margen [s] marketing_coss_selling [n] tpaquete1 [n] tpaquete2 [n] tpaquete3 [n] tpaquete4 [n] tpaquete5 [n] tpaquete6 [n] tpaquete7 [n] tpaquete8 [n] tpaquete9 [n] tcuentas [n] tcuenta_corriente [n] mcuenta_corriente_Nopaquete [s] mcuenta_corriente_Paquete [s] ";
 	String campos2 =" mcuenta_corriente_dolares [n] tcaja_ahorro [n] mcaja_ahorro_Paquete [s] mcaja_ahorro_Nopaquete [s] mcaja_ahorro_dolares [s] mdescubierto_preacordado [n] mcuentas_saldo [s] ttarjeta_debito [n] ctarjeta_debito_transacciones [s] mautoservicio [s] ttarjeta_visa [n] ctarjeta_visa_transacciones [s] mtarjeta_visa_consumo [s] ttarjeta_master [n] ctarjeta_master_transacciones [s] mtarjeta_master_consumo [s] cprestamos_personales [s] mprestamos_personales [s] cprestamos_prendarios [n] mprestamos_prendarios [s]";
@@ -1034,7 +1035,7 @@ public static String[] comandoArbolVersion7030Historia(AutomatizarCorridasArbolJ
 }
 public static String[] comandoArbolVersionParametrizadoArbolNoVarParaPaq1(AutomatizarCorridasArbolJulioConfig configArbol ){
 
-	String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+	String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 	configArbol.setTimeStampFolder(timeStamp);
 	String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 	File carpetaOut = new File(carpetaOutput);
@@ -1099,7 +1100,7 @@ public static String[] comandoArbolVersionParametrizadoArbolNoVarParaPaq1(Automa
 }
 public static String[] comandoArbolVersionParametrizadoArbolNoVarParaPaq1Mezclado(AutomatizarCorridasArbolJulioConfig configArbol ){
 
-	String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+	String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 	configArbol.setTimeStampFolder(timeStamp);
 	String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 	File carpetaOut = new File(carpetaOutput);

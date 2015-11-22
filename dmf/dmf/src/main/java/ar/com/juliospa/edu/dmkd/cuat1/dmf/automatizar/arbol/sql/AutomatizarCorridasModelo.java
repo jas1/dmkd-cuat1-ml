@@ -1,7 +1,8 @@
-package ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old;
+package ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.sql;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -17,8 +18,10 @@ import org.jsoup.nodes.Element;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioConfig;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioResultado;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.ParseNodosType;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.UtilidadesGenerales;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.model.NodoResultadoTablaNormalizada;
+
+import com.ibm.statistics.plugin.StatsException;
+import com.ibm.statistics.plugin.StatsUtil;
 
 /**
  * la idea de esta clase es automatizar las corridas del arbol
@@ -36,34 +39,10 @@ import ar.com.juliospa.edu.dmkd.cuat1.dmf.model.NodoResultadoTablaNormalizada;
  * @author julio
  *
  */
-public class AutomatizarCorridasArbolJulio {
+public class AutomatizarCorridasModelo {
 
 	private static final String TEST = "Test";
 	private static final String TRAINING = "Training";
-
-
-	public static AutomatizarCorridasArbolJulioResultado ejecucionArbolVersionParametrizadoArbol(AutomatizarCorridasArbolJulioConfig configArbol,String[] commands) {
-
-		configArbol.setComandoSPSS(commands);
-		
-		AutomatizarCorridasArbolJulioResultado resultado = new AutomatizarCorridasArbolJulioResultado(configArbol);
-		resultado.setTiempoInicioEjecucion(new Date());
-		UtilidadesGenerales.ejecutarComandosSpss(commands);
-		resultado.setTiempoFinEjecucion(new Date());
-		
-		List<NodoResultadoTablaNormalizada> nodosArbol;
-		try {
-			nodosArbol = getElementsForArbolTrainTest(configArbol);
-			resultado.setNodosResultantes(nodosArbol);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		resultado.setTiempoFin(new Date());
-		return resultado ;
-	}
-	
 
 	public static AutomatizarCorridasArbolJulioResultado ejecucionArbol(AutomatizarCorridasArbolJulioConfig configArbol,String[] commands,ParseNodosType tipo) {
 
@@ -71,7 +50,7 @@ public class AutomatizarCorridasArbolJulio {
 		
 		AutomatizarCorridasArbolJulioResultado resultado = new AutomatizarCorridasArbolJulioResultado(configArbol);
 		resultado.setTiempoInicioEjecucion(new Date());
-		UtilidadesGenerales.ejecutarComandosSpss(commands);
+		ejecutarComandosSpss(commands);
 		resultado.setTiempoFinEjecucion(new Date());
 		
 		List<NodoResultadoTablaNormalizada> nodosArbol = null;
@@ -92,59 +71,6 @@ public class AutomatizarCorridasArbolJulio {
 		resultado.setTiempoFin(new Date());
 		return resultado ;
 	}
-	
-	public static AutomatizarCorridasArbolJulioResultado ejecucionArbolVersionParametrizadoArbolNoVarParaPaq1(AutomatizarCorridasArbolJulioConfig configArbol) {
-//		String[] commands= comandoArbolVersionParametrizadoArbolNoVarParaPaq1(configArbol);
-		String[] commands= AcumuladorComandosSpss.comandoArbolVersionParametrizadoArbolNoVarParaPaq1Mezclado(configArbol);
-		configArbol.setComandoSPSS(commands);
-		
-		AutomatizarCorridasArbolJulioResultado resultado = new AutomatizarCorridasArbolJulioResultado(configArbol);
-		resultado.setTiempoInicioEjecucion(new Date());
-		UtilidadesGenerales.ejecutarComandosSpss(commands);
-		resultado.setTiempoFinEjecucion(new Date());
-		
-		List<NodoResultadoTablaNormalizada> nodosArbol;
-		try {
-			nodosArbol = getElementsForArbolTrainTest(configArbol);
-			resultado.setNodosResultantes(nodosArbol);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		resultado.setTiempoFin(new Date());
-		return resultado ;
-	}
-	
-	/**
-	 * par aparsear el resultado del arbol si ya se tiene una carpeta con corridas, configurarla en la configuracion.
-	 * a diferencia si se ejecuta completo es que no va a tener cuanto duro.
-	 * @param configArbol
-	 */
-	public static AutomatizarCorridasArbolJulioResultado parseResultadoDefault(AutomatizarCorridasArbolJulioConfig configArbol) {
-		AutomatizarCorridasArbolJulioResultado resultado = new AutomatizarCorridasArbolJulioResultado(configArbol);
-		try {
-			List<NodoResultadoTablaNormalizada> nodosArbol = getElementsForArbolDefault(configArbol);
-			resultado.setNodosResultantes(nodosArbol);
-		} catch ( Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		return resultado;
-	}
-	
-	public static AutomatizarCorridasArbolJulioResultado parseResultadoTrainTest(AutomatizarCorridasArbolJulioConfig configArbol) {
-		AutomatizarCorridasArbolJulioResultado resultado = new AutomatizarCorridasArbolJulioResultado(configArbol);
-		try {
-			List<NodoResultadoTablaNormalizada> nodosArbol = getElementsForArbolTrainTest(configArbol);
-			resultado.setNodosResultantes(nodosArbol);
-		} catch ( Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		return resultado;
-	}
-
 
 	/**
 	 * @param configArbol
@@ -351,85 +277,25 @@ public class AutomatizarCorridasArbolJulio {
 		return resultado;
 	}
 	/**
-	 * para hacer lac orrida default
-	 * @param configArbol solo toma las propiedades dec onfiguracio: output folder, datos origen sav.
-	 * @return
+	 * @param commands
 	 */
-	public static AutomatizarCorridasArbolJulioResultado ejecucionArbol7030historia(AutomatizarCorridasArbolJulioConfig configArbol){
-		
-		AutomatizarCorridasArbolJulioResultado resultado = new AutomatizarCorridasArbolJulioResultado(configArbol);
-		String[] commands= AcumuladorComandosSpss.comandoArbolVersion7030Historia(configArbol);
-		
-		resultado.setTiempoInicioEjecucion(new Date());
-		
-		for (String string : commands) {
-			System.out.println(string);
-		}
-		
-		UtilidadesGenerales.ejecutarComandosSpss(commands);
-		resultado.setTiempoFinEjecucion(new Date());
-		
-		resultado.setTiempoFin(new Date());
-		
-		List<NodoResultadoTablaNormalizada> nodosArbol;
+	public static void ejecutarComandosSpss(String[] commands) {
 		try {
-			nodosArbol = getElementsForArbolDefault(configArbol);
-			resultado.setNodosResultantes(nodosArbol);
-		} catch (Exception e) {
+			StatsUtil.start();
+			StatsUtil.submit(commands);
+			StatsUtil.stop();
+		} catch (StatsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return resultado ;
 	}
 	
-	/**
-	 * para hacer lac orrida default
-	 * @param configArbol solo toma las propiedades dec onfiguracio: output folder, datos origen sav.
-	 * @return
-	 */
-	public static AutomatizarCorridasArbolJulioResultado ejecucionArbolDefault(AutomatizarCorridasArbolJulioConfig configArbol){
-		
-		AutomatizarCorridasArbolJulioResultado resultado = new AutomatizarCorridasArbolJulioResultado(configArbol);
-		String[] commands= AcumuladorComandosSpss.comandoArbolDefault(configArbol);
-		
-		resultado.setTiempoInicioEjecucion(new Date());
-		UtilidadesGenerales.ejecutarComandosSpss(commands);
-		resultado.setTiempoFinEjecucion(new Date());
-		
-		resultado.setTiempoFin(new Date());
-		
-		List<NodoResultadoTablaNormalizada> nodosArbol;
-		try {
-			nodosArbol = getElementsForArbolDefault(configArbol);
-			resultado.setNodosResultantes(nodosArbol);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return resultado ;
-	}
-	/**
-	 * @param configArbol
-	 */
-	public static AutomatizarCorridasArbolJulioResultado ejecucionArbolVersionParametrizadoArbolNoChaidNoCampos(AutomatizarCorridasArbolJulioConfig configArbol) {
-		AutomatizarCorridasArbolJulioResultado resultado = new AutomatizarCorridasArbolJulioResultado(configArbol);
-		String[] commands= AcumuladorComandosSpss.comandoArbolVersionParametrizadoArbolNoChaidNoCampos(configArbol);
-		
-		resultado.setTiempoInicioEjecucion(new Date());
-		UtilidadesGenerales.ejecutarComandosSpss(commands);
-		resultado.setTiempoFinEjecucion(new Date());
-		
-		List<NodoResultadoTablaNormalizada> nodosArbol;
-		try {
-			nodosArbol = getElementsForArbolTrainTest(configArbol);
-			resultado.setNodosResultantes(nodosArbol);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		resultado.setTiempoFin(new Date());
-		return resultado ;
+	public static String getTimeStamp(Date date, String format) {
+		Date defaultDate = (date != null) ? date : new Date();
+		String defaulFormat = (format != null) ? format : "yyyyMMdd_HHmmss";
+
+		SimpleDateFormat lSDF = new SimpleDateFormat(defaulFormat);
+		return lSDF.format(defaultDate);
 	}	
 	
 }

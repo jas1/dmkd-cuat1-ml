@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioConfig;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioResultado;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.UtilidadesGenerales;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AcumuladorComandosSpss;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulio;
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulioExplorandoParametrosBase;
@@ -246,7 +247,7 @@ public class PruebasArbol20151107 {
 		String[] datosValues = new String[]{"201411","201412","201501","201502","201503","201504"};
 		for (String currentRempl : datosValues) {
 			String[] commands= AcumuladorComandosSpss.comandoGenerarArchivosTarjetaHistoriaAVG(outFolder, origenDatos.replace("REMP", currentRempl));
-			AutomatizarCorridasArbolJulio.ejecutarComandosSpss(commands);	
+			UtilidadesGenerales.ejecutarComandosSpss(commands);	
 		}
 		
 		System.out.println(outFolder);

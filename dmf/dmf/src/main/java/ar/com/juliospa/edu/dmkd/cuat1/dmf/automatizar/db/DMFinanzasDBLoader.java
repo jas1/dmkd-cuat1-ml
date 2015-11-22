@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulio;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.UtilidadesGenerales;
 
 /**
  * para cargar datos en la DB.
@@ -48,7 +48,7 @@ public class DMFinanzasDBLoader {
 
 	public void cargarBaseGrande(String lines, Connection con) {
 
-		System.out.println("inicio proceso: " + AutomatizarCorridasArbolJulio.getTimeStamp(new Date(), null) );
+		System.out.println("inicio proceso: " + UtilidadesGenerales.getTimeStamp(new Date(), null) );
 		
 		try {
 			FileInputStream fis = new FileInputStream(lines);
@@ -136,7 +136,7 @@ public class DMFinanzasDBLoader {
 
 				} catch (SQLException | NumberFormatException e) {
 					System.out.println(line);
-					System.out.println("revento proceso: " + AutomatizarCorridasArbolJulio.getTimeStamp(new Date(), null) );
+					System.out.println("revento proceso: " + UtilidadesGenerales.getTimeStamp(new Date(), null) );
 					e.printStackTrace();
 					throw new RuntimeException(e);
 				}
@@ -146,12 +146,12 @@ public class DMFinanzasDBLoader {
 			br.close();
 		} catch (Exception e) {
 			
-			System.out.println("revento proceso: " + AutomatizarCorridasArbolJulio.getTimeStamp(new Date(), null) );
+			System.out.println("revento proceso: " + UtilidadesGenerales.getTimeStamp(new Date(), null) );
 			e.printStackTrace();
 			throw new RuntimeException(e);
 
 		}
 		
-		System.out.println("fin proceso: " + AutomatizarCorridasArbolJulio.getTimeStamp(new Date(), null) );
+		System.out.println("fin proceso: " + UtilidadesGenerales.getTimeStamp(new Date(), null) );
 	}
 }

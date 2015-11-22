@@ -3,7 +3,7 @@ package ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.sql;
 import java.io.File;
 
 import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioConfig;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulio;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.UtilidadesGenerales;
 
 
 /**
@@ -25,7 +25,7 @@ public class AcumuladorComandosSpss {
 	 * @return
 	 */
 	public static String[] comandoArbolDefaultLevantadoSQL(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 		File carpetaOut = new File(carpetaOutput);
@@ -124,7 +124,7 @@ public class AcumuladorComandosSpss {
 	}
 
 	public static String[] comandoArbolDefaultLevantadoSQL7030(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 		File carpetaOut = new File(carpetaOutput);
@@ -237,7 +237,7 @@ public class AcumuladorComandosSpss {
 	
 	
 	public static String[] comandoArbolSQL7030ConVarsHistoria(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 		File carpetaOut = new File(carpetaOutput);
@@ -371,7 +371,7 @@ public class AcumuladorComandosSpss {
 	}
 	
 	public static String[] comandoArbolSQL7030ConVarsHistoriaReducto2(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 		File carpetaOut = new File(carpetaOutput);
@@ -472,7 +472,7 @@ public class AcumuladorComandosSpss {
 	
 	
 	public static String[] comandoArbolSQL7030ConVarsHistoriaReducto1(AutomatizarCorridasArbolJulioConfig configArbol) {
-		String timeStamp = AutomatizarCorridasArbolJulio.getTimeStamp(null,null);
+		String timeStamp = UtilidadesGenerales.getTimeStamp(null,null);
 		configArbol.setTimeStampFolder(timeStamp);
 		String carpetaOutput = configArbol.getOutputFolder()+timeStamp;
 		File carpetaOut = new File(carpetaOutput);
@@ -563,6 +563,72 @@ public class AcumuladorComandosSpss {
 	    			"  /OUTFILE TRAININGMODEL='"+fileXmlTrain+"' TESTMODEL='"+fileXmlTest+"'",
 	    			"  /MISSING NOMINALMISSING=MISSING.",
 	                "EXECUTE.",
+					"OMSEND."};
+	
+			
+			return result;
+			
+		}else{
+			throw new RuntimeException("No se pudo crear la carpeta:"+ carpetaOut.getAbsolutePath());
+		}
+	}
+	
+	/**
+	 * para poder correr esto la configuracion debe tener SI O SI las clumnas <br>
+	 * numero_de_cliente, foto_mes
+	 * @param configArbol
+	 * @param aOutFolder 
+	 * @param timeStamp,String outFileName,String comandoSQLSPSS,String modelFileXml, 
+	 * @return
+	 */
+	public static String[] comandoModeloToDB(String aOutFolder, String timeStamp,String comandoSQLSPSS,String modelFileXml,String modelNodeIdVar, String modelProbBaja2Var, String modelGananciaVar,String odbcName,String tableInsertResultado,String probabilidadFiltro,int calculoGananciaGanancia,int calculoGananciaCosto) {
+		String carpetaOutput = aOutFolder+timeStamp;
+		String tabla = tableInsertResultado+"_"+timeStamp;
+		File carpetaOut = new File(carpetaOutput);
+		if (carpetaOut.mkdirs()) {
+			String outFileName = carpetaOutput+"/"+"output.html";
+			String[] result = {
+					"OMS",
+	                "/DESTINATION FORMAT=HTML OUTFILE='"+outFileName+"'.",
+	                
+	                "GET DATA",
+	                "  /TYPE=ODBC",
+	                "  /CONNECT='DSN=dmkd-dmf;'",
+	                comandoSQLSPSS,
+	                "  /ASSUMEDSTRWIDTH=255.",
+	                "",
+	                "CACHE.",
+	                "EXECUTE.",
+	                "DATASET NAME currentSql.",
+	                "RECODE clase ('CONTINUA'=0) ('BAJA+1'=1) ('BAJA+2'=2) INTO clase_int.",
+	                "EXECUTE.",
+	                "",
+	                "MODEL HANDLE NAME=model FILE='"+modelFileXml+"' ",
+	                "  /OPTIONS MISSING=SUBSTITUTE.",
+	                "COMPUTE "+modelNodeIdVar+"=APPLYMODEL(model, 'NODEID'). ",
+	                "COMPUTE "+modelProbBaja2Var+"=APPLYMODEL(model, 'PROBABILITY', 'BAJA+2'). ",
+	                "EXECUTE. ",
+	                "MODEL CLOSE NAME=model. ",
+	                "",
+	                "IF  ("+modelProbBaja2Var+"   >= "+probabilidadFiltro+" AND clase_int=2 ) "+modelGananciaVar+"="+(calculoGananciaGanancia-calculoGananciaCosto)+". ",
+	                "EXECUTE.  ",
+	                "RECODE "+modelGananciaVar+" (SYSMIS=-"+calculoGananciaCosto+"). ",
+	                "EXECUTE.",
+	                "",
+	                "SAVE TRANSLATE /TYPE=ODBC ",
+	                "  /CONNECT='DSN="+odbcName+";' ",
+	                "  /ENCRYPTED ",
+	                "  /MISSING=RECODE ",
+	                "  /SQL='CREATE TABLE "+tabla+" (numero_de_cliente double , foto_mes double, clase_int int,'+ ",
+	                "'"+modelNodeIdVar+" double , "+modelProbBaja2Var+" double, "+modelGananciaVar+" double )' ",
+	                "  /REPLACE ",
+	                "  /TABLE='SPSS_TEMP' ",
+	                "  /KEEP=numero_de_cliente, foto_mes, clase_int, "+modelNodeIdVar+", "+modelProbBaja2Var+" ,"+modelGananciaVar,
+	                "  /SQL='INSERT INTO "+tabla+" (numero_de_cliente, foto_mes,clase_int, "+modelNodeIdVar+", "+modelProbBaja2Var+" ,"+modelGananciaVar+")'+",
+	                " 'SELECT numero_de_cliente, foto_mes, clase_int, "+modelNodeIdVar+", "+modelProbBaja2Var+" ,"+modelGananciaVar+" FROM SPSS_TEMP' ",
+	                "  /SQL='DROP TABLE SPSS_TEMP'.  ",
+	                "EXECUTE.",
+	                
 					"OMSEND."};
 	
 			

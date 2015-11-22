@@ -9,7 +9,6 @@ import java.util.Map;
 import org.apache.commons.lang3.RandomUtils;
 
 public abstract class CamposSQLHelper {
-
 	
 	public static List<String> getCampos() {
 		List<String> campos = new ArrayList<String>();
@@ -341,6 +340,73 @@ public abstract class CamposSQLHelper {
 		}
 		
 		return mapaSelected;
+		
+	}
+	
+	public static String transformSqltoSpss(String sql) {
+//		 identificar campos
+//		convertir en no mas de N ccaracteres pro linea
+//		 tiene que quedar como
+//		/SQL='SELECT numero_de_cliente, foto_mes, marketing_activo_ultimos90dias, cliente_vip, '+
+		
+		if (sql.contains("SELECT")) {
+			
+			String lineEnd = " '+\n";
+			String lineInit = "'";
+			
+			StringBuilder build = new StringBuilder();
+			build.append("/SQL='SELECT ");
+//			parte del select hasta el form , el resto no me calienta tanto.
+			
+			String campos =  sql.substring(sql.indexOf("SELECT ")+7,sql.indexOf(" FROM"));
+			boolean es1ro = true;
+			if (campos.length() > 90) {
+				String[] soloCampos = campos.split(",");
+				String  acumulador = "";
+				for (String campo : soloCampos) {
+					if (acumulador.length() < 70) {
+						acumulador+=campo+",";	
+					}else{
+						if (es1ro) {
+							build.append(acumulador).append(lineEnd);
+							es1ro = false;
+						}else{
+							build.append(lineInit).append(acumulador).append(lineEnd);	
+						}
+						
+//						build.append(lineInit).append(acumulador).append(lineEnd);
+						acumulador="";
+						acumulador+=campo+",";
+						
+					}
+				}
+				if (acumulador.length()!= 0) {
+					if (es1ro) {
+						build.append(acumulador).append(lineEnd);
+						es1ro = false;
+					}else{
+						build.append(lineInit).append(acumulador).append(lineEnd);	
+					}
+				}
+				
+				
+				build.deleteCharAt(build.lastIndexOf(","));
+			}else{
+				build.append(campos).append(lineEnd);
+			}
+			
+
+			
+//			parte del where 
+			String restoConsulta =  sql.substring(sql.indexOf(" FROM"));
+			restoConsulta = restoConsulta.replace(";", "");
+			build.append(lineInit).append(restoConsulta).append("'");
+			
+			return build.toString();
+		}else{
+			throw new RuntimeException ("Solo banco SELECT (si en mayuscula) ");
+		}
+		
 		
 	}
 	

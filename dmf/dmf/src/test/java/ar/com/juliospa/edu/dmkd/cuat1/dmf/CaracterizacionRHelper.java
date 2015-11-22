@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulio;
+import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.UtilidadesGenerales;
 
 /**
  * la idea de esta clase es : 
@@ -153,7 +153,7 @@ public class CaracterizacionRHelper {
 		String result = tipoPorQueryDb + "\n";
 		String summaryName = "summary"+filtro;
 		result += summaryName+" <- summary(currentData[,filter"+filtro+"]) \n";
-		result += "write.csv("+summaryName+",file = '"+AutomatizarCorridasArbolJulio.getTimeStamp(null,null)+"variables_abril_"+summaryName+".txt',row.names=FALSE)\n";
+		result += "write.csv("+summaryName+",file = '"+UtilidadesGenerales.getTimeStamp(null,null)+"variables_abril_"+summaryName+".txt',row.names=FALSE)\n";
 		return result;
 	}
 
