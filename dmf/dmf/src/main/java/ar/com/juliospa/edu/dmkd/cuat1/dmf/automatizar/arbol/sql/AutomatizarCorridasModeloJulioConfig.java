@@ -33,6 +33,37 @@ public class AutomatizarCorridasModeloJulioConfig {
 	private String[] comandoSPSS;
 	
 	
+	/**
+	 * la idea es ar amodelos con multiples seed se puedea  correr las 5 a la vez
+	 * @param comandoSQLSPSS
+	 * @param modelFileXml
+	 * @param modelNodeIdVar
+	 * @param modelProbBaja2Var
+	 * @param modelGananciaVar
+	 * @param odbcName
+	 * @param tableInsertResultado
+	 * @param probabilidadFiltro
+	 * @param calculoGananciaGanancia
+	 * @param calculoGananciaCosto
+	 * @param timeStampFolder
+	 * @param outputFolder
+	 */
+	public AutomatizarCorridasModeloJulioConfig(String comandoSQLSPSS, String[] modelFileXml, String modelNodeIdVar, String modelProbBaja2Var, String modelGananciaVar, String odbcName, String tableInsertResultado, String probabilidadFiltro, int calculoGananciaGanancia, int calculoGananciaCosto, String timeStampFolder, String outputFolder) {
+		this.comandoSQLSPSS = comandoSQLSPSS;
+		this.modelNodeIdVar = modelNodeIdVar;
+		this.modelProbBaja2Var = modelProbBaja2Var;
+		this.modelGananciaVar = modelGananciaVar;
+		this.odbcName = odbcName;
+		this.tableInsertResultado = tableInsertResultado;
+		this.probabilidadFiltro = probabilidadFiltro;
+		this.calculoGananciaGanancia = calculoGananciaGanancia;
+		this.calculoGananciaCosto = calculoGananciaCosto;
+		this.timeStampFolder = timeStampFolder;
+		this.outputFolder = outputFolder;
+		
+		comandoSPSS = AcumuladorComandosSpss.comandoModeloToDBWithSeed(outputFolder, timeStampFolder, comandoSQLSPSS, modelFileXml, modelNodeIdVar, modelProbBaja2Var, modelGananciaVar, odbcName, tableInsertResultado, probabilidadFiltro, calculoGananciaGanancia, calculoGananciaCosto);
+		
+	}
 	
 	
 	public AutomatizarCorridasModeloJulioConfig(String comandoSQLSPSS, String modelFileXml, String modelNodeIdVar, String modelProbBaja2Var, String modelGananciaVar, String odbcName, String tableInsertResultado, String probabilidadFiltro, int calculoGananciaGanancia, int calculoGananciaCosto, String timeStampFolder, String outputFolder) {
