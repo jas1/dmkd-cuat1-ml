@@ -453,6 +453,15 @@ public class AcumuladorComandosSpss {
 			build.append("RECODE ").append(nombresVariables.get(modelo+MODEL_SUFFIX_G)).append(" (SYSMIS=-").append(calculoGananciaCosto).append(").\n");
 			build.append("EXECUTE.\n");
 		}
+		
+//		falta agregar el promedio de las ganancias de los modelos
+//		COMPUTE avg_probs=(A_0_A_prob_b2+A_1_A_prob_b2+A_2_A_prob_b2+A_3_A_prob_b2+A_4_A_prob_b2)/5. 
+//				EXECUTE. 
+//				IF  (avg_probs   >= 0.025 AND clase_int=2 ) avg_ganancia=7800. 
+//				EXECUTE. 
+//				RECODE avg_ganancia (SYSMIS=-200). 
+//				EXECUTE.
+		
 		return build.toString();
 	}
 
