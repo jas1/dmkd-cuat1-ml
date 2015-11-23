@@ -283,9 +283,11 @@ public class AcumuladorComandosSpss {
 	 * @param probabilidadFiltro
 	 * @param calculoGananciaGanancia
 	 * @param calculoGananciaCosto
+	 * @param ensembleGanancia 
+	 * @param ensembleProbs 
 	 * @return
 	 */
-	public static String[] comandoModeloToDBWithSeed(String aOutFolder, String timeStamp, String comandoSQLSPSS, String[] modelFileXml, String modelNodeIdVar, String modelProbBaja2Var, String modelGananciaVar, String odbcName, String tableInsertResultado, String probabilidadFiltro, int calculoGananciaGanancia, int calculoGananciaCosto) {
+	public static String[] comandoModeloToDBWithSeed(String aOutFolder, String timeStamp, String comandoSQLSPSS, String[] modelFileXml, String modelNodeIdVar, String modelProbBaja2Var, String modelGananciaVar, String odbcName, String tableInsertResultado, String probabilidadFiltro, int calculoGananciaGanancia, int calculoGananciaCosto, String ensembleProbs, String ensembleGanancia) {
 		String carpetaOutput = aOutFolder + timeStamp;
 		String tabla = tableInsertResultado + "_" + timeStamp;
 		File carpetaOut = new File(carpetaOutput);
@@ -298,7 +300,7 @@ public class AcumuladorComandosSpss {
 					// incluir 2, 3 y 4 , porque son dependeintes de la N
 					// cantidad de modelos a armar )
 					// FASE 3: calculo de la ganancia sobre el modelo aplicado
-					faseDosTresCuatroModelSyntax(modelFileXml,modelNodeIdVar,modelProbBaja2Var,modelGananciaVar,probabilidadFiltro,calculoGananciaGanancia,calculoGananciaCosto,odbcName,tabla),
+					faseDosTresCuatroModelSyntax(modelFileXml,modelNodeIdVar,modelProbBaja2Var,modelGananciaVar,probabilidadFiltro,calculoGananciaGanancia,calculoGananciaCosto,odbcName,tabla,ensembleProbs,ensembleGanancia),
 					"EXECUTE.",
 
 					"OMSEND." };
@@ -338,9 +340,11 @@ public class AcumuladorComandosSpss {
 	 * @param calculoGananciaCosto
 	 * @param odbcName
 	 * @param tabla
+	 * @param ensembleGanancia 
+	 * @param ensembleProbs 
 	 * @return
 	 */
-	private static String faseDosTresCuatroModelSyntax(String[] modelFileXml, String modelNodeIdVar, String modelProbBaja2Var, String modelGananciaVar, String probabilidadFiltro, int calculoGananciaGanancia, int calculoGananciaCosto, String odbcName, String tabla) {
+	private static String faseDosTresCuatroModelSyntax(String[] modelFileXml, String modelNodeIdVar, String modelProbBaja2Var, String modelGananciaVar, String probabilidadFiltro, int calculoGananciaGanancia, int calculoGananciaCosto, String odbcName, String tabla, String ensembleProbs, String ensembleGanancia) {
 
 		// luego de analizar todo lo de abajo , decidimos:
 		// generar el nombre de las variables,
@@ -350,8 +354,8 @@ public class AcumuladorComandosSpss {
 
 		Map<String, String> nombresVariables = generarNombresVariables(modelFileXml, modelNodeIdVar, modelProbBaja2Var, modelGananciaVar);
 		String corredorModelos = generarCorrerModelos(nombresVariables, modelFileXml);
-		String gananciaModelos = generarGananciasModelos(nombresVariables, modelFileXml,probabilidadFiltro,calculoGananciaGanancia,calculoGananciaCosto);
-		String persistenciaEjecucionModelos = generarpersistenciaEjecucionModelos(nombresVariables, modelFileXml,odbcName,tabla);
+		String gananciaModelos = generarGananciasModelos(nombresVariables, modelFileXml,probabilidadFiltro,calculoGananciaGanancia,calculoGananciaCosto,ensembleProbs,ensembleGanancia);
+		String persistenciaEjecucionModelos = generarpersistenciaEjecucionModelos(nombresVariables, modelFileXml,odbcName,tabla,ensembleProbs,ensembleGanancia);
 		String[] result = {
 				// FASE 2: ejecucion del modelo sobre los datos ( requiere
 				// incluir 2, 3 y 4 , porque son dependeintes de la N cantidad
@@ -386,7 +390,7 @@ public class AcumuladorComandosSpss {
 		return build.toString();
 	}
 
-	private static String generarpersistenciaEjecucionModelos(Map<String, String> nombresVariables, String[] modelFileXml, String odbcName, String tabla) {
+	private static String generarpersistenciaEjecucionModelos(Map<String, String> nombresVariables, String[] modelFileXml, String odbcName, String tabla, String ensembleProbs, String ensembleGanancia) {
 		// voy haciendo get de las variables con el postfijo acorde N, P o G
 //		aca la cosa cambia porque lo que itera son las columnas no todo
 		StringBuilder build = new StringBuilder();
@@ -398,55 +402,78 @@ public class AcumuladorComandosSpss {
 		for (String valoresVars : nombresVariables.values()) {
 			build.append("'" ).append(valoresVars).append( " double , '+\n");
 		}
-		build.deleteCharAt(build.lastIndexOf("\n"));
-		build.deleteCharAt(build.lastIndexOf("+"));
-		build.deleteCharAt(build.lastIndexOf("'"));
-		build.deleteCharAt(build.lastIndexOf(" "));
-		build.deleteCharAt(build.lastIndexOf(","));
-		build.deleteCharAt(build.lastIndexOf(" "));
+		// para sacar la coma sobrante: ya no sobra mas por vars de elsembe
+//		build.deleteCharAt(build.lastIndexOf("\n"));
+//		build.deleteCharAt(build.lastIndexOf("+"));
+//		build.deleteCharAt(build.lastIndexOf("'"));
+//		build.deleteCharAt(build.lastIndexOf(" "));
+//		build.deleteCharAt(build.lastIndexOf(","));
+//		build.deleteCharAt(build.lastIndexOf(" "));
+//		
+//		variables del ensemble
+		build.append("'" ).append(ensembleProbs).append( " double , '+\n");
+		build.append("'" ).append(ensembleGanancia).append( " double");
+//		closing
 		build.append(")'\n");
 		build.append("  /REPLACE\n").append( "  /TABLE='SPSS_TEMP'\n").append("  /KEEP=numero_de_cliente, foto_mes, clase_int, " );		
 		
 		for (String valoresVars : nombresVariables.values()) {
 			build.append( valoresVars ).append( ",\n");
 		}
-		// para sacar la coma sobrante
-		build.deleteCharAt(build.lastIndexOf(","));
+		// para sacar la coma sobrante: ya no sobra mas por vars de elsembe
+//		build.deleteCharAt(build.lastIndexOf(","));
+		
+//		variables del ensemble
+		build.append(ensembleProbs).append( ",\n");
+		build.append(ensembleGanancia).append( "\n");
 		
 		build.append("  /SQL='INSERT INTO " ).append( tabla ).append(" '+\n");
 		build.append( "' (numero_de_cliente, foto_mes,clase_int, " ).append("'+\n'");
 		for (String valoresVars : nombresVariables.values()) {
 			build.append( valoresVars + ", ").append("'+\n'");
 		}
-		// para sacar la coma sobrante
-		build.deleteCharAt(build.lastIndexOf("'"));
-		build.deleteCharAt(build.lastIndexOf("\n"));
-		build.deleteCharAt(build.lastIndexOf("+"));
-		build.deleteCharAt(build.lastIndexOf("'"));
-		build.deleteCharAt(build.lastIndexOf(" "));
-		build.deleteCharAt(build.lastIndexOf(","));
+		// para sacar la coma sobrante: ya no sobra mas por vars de elsembe
+//		build.deleteCharAt(build.lastIndexOf("'"));
+//		build.deleteCharAt(build.lastIndexOf("\n"));
+//		build.deleteCharAt(build.lastIndexOf("+"));
+//		build.deleteCharAt(build.lastIndexOf("'"));
+//		build.deleteCharAt(build.lastIndexOf(" "));
+//		build.deleteCharAt(build.lastIndexOf(","));
+		
+//		variables del ensemble
+		build.append(ensembleProbs).append( " , '+\n");
+		// aca no tengo enter porque dejo que lo sigueinte sea el closing
+		build.append("'" ).append(ensembleGanancia);
+		
 		build.append(")'+\n 'SELECT numero_de_cliente, foto_mes, clase_int, " ).append("'+\n'");
 		
 		for (String valoresVars : nombresVariables.values()) {
 			build.append( valoresVars + ", '+\n'");
 		}
-		// para sacar la coma sobrante
-		build.deleteCharAt(build.lastIndexOf("'"));
-		build.deleteCharAt(build.lastIndexOf("\n"));
-		build.deleteCharAt(build.lastIndexOf("+"));
-		build.deleteCharAt(build.lastIndexOf("'"));
-		build.deleteCharAt(build.lastIndexOf(" "));
-		build.deleteCharAt(build.lastIndexOf(","));
+		// para sacar la coma sobrante: ya no sobra mas por vars de elsembe
+//		build.deleteCharAt(build.lastIndexOf("'"));
+//		build.deleteCharAt(build.lastIndexOf("\n"));
+//		build.deleteCharAt(build.lastIndexOf("+"));
+//		build.deleteCharAt(build.lastIndexOf("'"));
+//		build.deleteCharAt(build.lastIndexOf(" "));
+//		build.deleteCharAt(build.lastIndexOf(","));
+		
+//		variables del ensemble
+		build.append(ensembleProbs).append( " , '+\n");
+		// aca no tengo enter porque dejo que lo sigueinte sea el closing
+		build.append("'" ).append(ensembleGanancia);
 
 		build.append( " FROM SPSS_TEMP'\n");
 		build.append("  /SQL='DROP TABLE SPSS_TEMP'.  ");
 		return build.toString();
 	}
 
-	private static String generarGananciasModelos(Map<String, String> nombresVariables, String[] modelFileXml, String probabilidadFiltro, int calculoGananciaGanancia, int calculoGananciaCosto) {
+	private static String generarGananciasModelos(Map<String, String> nombresVariables, String[] modelFileXml, String probabilidadFiltro, int calculoGananciaGanancia, int calculoGananciaCosto, String ensembleProbs, String ensembleGanancia) {
 		// voy haciendo get de las variables con el postfijo acorde N, P o G
+		List<String> soloProbs = new ArrayList<String>();
 		StringBuilder build = new StringBuilder();
 		for (String modelo : modelFileXml) {
+			soloProbs.add(nombresVariables.get(modelo+MODEL_SUFFIX_P));
 			build.append("IF  (").append(nombresVariables.get(modelo+MODEL_SUFFIX_P) ).append( "   >= " ).append( probabilidadFiltro ).append( " AND clase_int=2 ) " );
 			build.append( nombresVariables.get(modelo+MODEL_SUFFIX_G) ).append( "=" ).append( (calculoGananciaGanancia - calculoGananciaCosto) ).append( ".\n");
 			build.append("EXECUTE.\n");
@@ -461,6 +488,27 @@ public class AcumuladorComandosSpss {
 //				EXECUTE. 
 //				RECODE avg_ganancia (SYSMIS=-200). 
 //				EXECUTE.
+//		nombre de las variables del enseble
+
+//		calculo de las variables del ensemble en forma base,( el promedio )
+		build.append("COMPUTE ").append(ensembleProbs).append("=(");
+		for (String string : soloProbs) {
+//			A_0_A_prob_b2+A_1_A_prob_b2+A_2_A_prob_b2+A_3_A_prob_b2+A_4_A_prob_b2)/5. 
+			build.append(string).append("+");
+		}
+//		para sacar el ultimo que sobra
+		build.deleteCharAt(build.lastIndexOf("+"));
+		build.append(")/").append(soloProbs.size()).append(".\n");
+//		EXECUTE. 
+		build.append("EXECUTE.\n");
+//		IF  (avg_probs   >= 0.025 AND clase_int=2 ) avg_ganancia=7800.
+
+		build.append("IF  (").append(ensembleProbs).append( "   >= " ).append( probabilidadFiltro ).append( " AND clase_int=2 ) " );
+		build.append(ensembleGanancia ).append( "=" ).append( (calculoGananciaGanancia - calculoGananciaCosto) ).append( ".\n");
+		build.append("EXECUTE.\n");
+		build.append("RECODE ").append(ensembleGanancia).append(" (SYSMIS=-").append(calculoGananciaCosto).append(").\n");
+		build.append("EXECUTE.\n");
+		
 		
 		return build.toString();
 	}

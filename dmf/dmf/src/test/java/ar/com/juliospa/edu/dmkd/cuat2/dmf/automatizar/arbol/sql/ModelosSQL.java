@@ -99,6 +99,9 @@ public class ModelosSQL {
 		String modelProbBaja2Var="A_prob_b2";
 		String modelGananciaVar="A_ganancia";
 		String odbcName="dmkd-dmf";
+		final String ensembleProbs = "avg_probs";
+		final String ensembleGanancia = "avg_ganancia";
+		
 //		parametros_baseexpName_pr7_par300_child195	20151115_145540
 		String tableInsertResultado="ah201504pr7p300c195";
 		String probabilidadFiltro="0.025";
@@ -114,7 +117,7 @@ public class ModelosSQL {
 		
 		String comandoSQLSPSS= CamposSQLHelper.transformSqltoSpss(sql);
 		
-		AutomatizarCorridasModeloJulioConfig config = new AutomatizarCorridasModeloJulioConfig(comandoSQLSPSS, modelFileXml, modelNodeIdVar, modelProbBaja2Var, modelGananciaVar, odbcName, tableInsertResultado, probabilidadFiltro, calculoGananciaGanancia, calculoGananciaCosto, timeStampFolder, outputFolder);
+		AutomatizarCorridasModeloJulioConfig config = new AutomatizarCorridasModeloJulioConfig(comandoSQLSPSS, modelFileXml, modelNodeIdVar, modelProbBaja2Var, modelGananciaVar, odbcName, tableInsertResultado, probabilidadFiltro, calculoGananciaGanancia, calculoGananciaCosto, timeStampFolder, outputFolder,ensembleProbs,ensembleGanancia);
 		
 		String[] tmp = config.getComandoSPSS();
 		

@@ -47,8 +47,10 @@ public class AutomatizarCorridasModeloJulioConfig {
 	 * @param calculoGananciaCosto
 	 * @param timeStampFolder
 	 * @param outputFolder
+	 * @param ensembleGanancia 
+	 * @param ensembleProbs 
 	 */
-	public AutomatizarCorridasModeloJulioConfig(String comandoSQLSPSS, String[] modelFileXml, String modelNodeIdVar, String modelProbBaja2Var, String modelGananciaVar, String odbcName, String tableInsertResultado, String probabilidadFiltro, int calculoGananciaGanancia, int calculoGananciaCosto, String timeStampFolder, String outputFolder) {
+	public AutomatizarCorridasModeloJulioConfig(String comandoSQLSPSS, String[] modelFileXml, String modelNodeIdVar, String modelProbBaja2Var, String modelGananciaVar, String odbcName, String tableInsertResultado, String probabilidadFiltro, int calculoGananciaGanancia, int calculoGananciaCosto, String timeStampFolder, String outputFolder, String ensembleProbs, String ensembleGanancia) {
 		this.comandoSQLSPSS = comandoSQLSPSS;
 		this.modelNodeIdVar = modelNodeIdVar;
 		this.modelProbBaja2Var = modelProbBaja2Var;
@@ -61,7 +63,7 @@ public class AutomatizarCorridasModeloJulioConfig {
 		this.timeStampFolder = timeStampFolder;
 		this.outputFolder = outputFolder;
 		
-		comandoSPSS = AcumuladorComandosSpss.comandoModeloToDBWithSeed(outputFolder, timeStampFolder, comandoSQLSPSS, modelFileXml, modelNodeIdVar, modelProbBaja2Var, modelGananciaVar, odbcName, tableInsertResultado, probabilidadFiltro, calculoGananciaGanancia, calculoGananciaCosto);
+		comandoSPSS = AcumuladorComandosSpss.comandoModeloToDBWithSeed(outputFolder, timeStampFolder, comandoSQLSPSS, modelFileXml, modelNodeIdVar, modelProbBaja2Var, modelGananciaVar, odbcName, tableInsertResultado, probabilidadFiltro, calculoGananciaGanancia, calculoGananciaCosto, ensembleProbs,  ensembleGanancia);
 		
 	}
 	
