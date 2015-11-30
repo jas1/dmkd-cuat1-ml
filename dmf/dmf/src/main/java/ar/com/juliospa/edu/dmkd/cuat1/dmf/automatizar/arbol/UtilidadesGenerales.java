@@ -15,7 +15,9 @@ import com.ibm.statistics.plugin.StatsUtil;
 
 public abstract class UtilidadesGenerales {
 
-	public static final String separator = System.getProperty("line.separator");
+	public static final String lineSeparator = System.getProperty("line.separator");
+	public static final String pathSeparator = System.getProperty("path.separator");
+	public static final String fileSeparator = System.getProperty("file.separator");
 	
 	/**
 	 * @param commands
@@ -52,8 +54,8 @@ public abstract class UtilidadesGenerales {
 		return lSDF.format(defaultDate);
 	}
 	
-	public static void writeOutput(StringBuilder buildForFile, String nombreArchivo,
-			String path) {
+	
+	public static void writeOutput(String buildForFile, String nombreArchivo,String path) {
 		final String ENCODE = "UTF-8";
 		Date defaultDate = new Date();
 
@@ -74,7 +76,12 @@ public abstract class UtilidadesGenerales {
 
 		String result = path + fechaAlMomento + nombreArchivo;
 
-		writeToFile(buildForFile.toString(), ENCODE, result);
+		writeToFile(buildForFile, ENCODE, result);
+	}
+	
+	public static void writeOutput(StringBuilder buildForFile, String nombreArchivo,
+			String path) {
+		writeOutput(buildForFile.toString(),nombreArchivo,path);
 	}
 
 	public static void writeToFile(String stringToWrite, final String encoding,
