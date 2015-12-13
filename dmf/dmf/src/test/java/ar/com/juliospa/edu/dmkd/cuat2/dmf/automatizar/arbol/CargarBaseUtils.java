@@ -11,8 +11,8 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.db.DBFinanzasDBQueryBuilder;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.db.DMFinanzasDBLoader;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.db.DBFinanzasDBQueryBuilder;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.db.DMFinanzasDBLoader;
 
 /**
  * CUIDADO / WARNING

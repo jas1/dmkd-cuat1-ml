@@ -2,10 +2,10 @@ package ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.sql;
 
 import org.junit.Test;
 
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.UtilidadesGenerales;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.sql.AutomatizarCorridasModeloJulioConfig;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.sql.CamposSQLHelper;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.sql.ModelosSQLEjecutador;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.UtilidadesGenerales;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.sql.AutomatizarCorridasModeloJulioConfig;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.sql.CamposSQLHelper;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.sql.ModelosSQLEjecutador;
 
 public class ModelosSQL {
 

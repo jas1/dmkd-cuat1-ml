@@ -7,9 +7,9 @@ import java.util.Map.Entry;
 
 import org.junit.Test;
 
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.EntregableEstrategiaB;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.UtilidadesGenerales;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.sql.CamposSQLHelper;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.EntregableEstrategiaB;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.UtilidadesGenerales;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.sql.CamposSQLHelper;
 
 /**
  * esta clase es solo para correr lso arboles default y guardar dichos valores.
@@ -41,6 +41,7 @@ public class EstrategiaBMuchosChicos {
 		String[] tmp7 = soloEstadosNoHist();
 		String[] tmp8 = soloHist();
 		String[] tmp9 = normHist();
+		String[] tmp10 = soloIntsNoHist();
 
 
 		
@@ -55,6 +56,7 @@ public class EstrategiaBMuchosChicos {
 		list.add(tmp7);
 		list.add(tmp8);
 		list.add(tmp9);
+		list.add(tmp10);
 
 		StringBuilder build = new StringBuilder();
 		for (String[] comandos : list) {
@@ -84,14 +86,20 @@ public class EstrategiaBMuchosChicos {
 	public void testFase2() {
 		StringBuilder build = new StringBuilder();
 		build.append(fase2EvaluacionYPersistencia());
-		String outFolder = "C:/Users/julio/Desktop/dmf_wd/ENTREGABLE/output";
-		String spssSyntax = "syntax-assess-persist.txt";
+		String outFolder = "C:/Users/julio/Desktop/dmf_wd/ENTREGABLE/output_arbol6";
+		String spssSyntax = "syntax-assess-persist-arboles-6.txt";
 		UtilidadesGenerales.writeOutput(build, spssSyntax, outFolder);
 		
 	}
 
 	
-	
+	@Test
+	public void ejecutarArbolesSinCols() {
+		String[] tmp = soloColsDefault();
+
+		System.out.println(tmp[0]);
+
+	}
 	
 
 	@Test
@@ -396,7 +404,7 @@ public class EstrategiaBMuchosChicos {
 
 		// esto es cabezota
 		String[] subfixModelos = { SOLO, SOLO_AGRE, NOR_AGRE, NOR_TARJ, SOLO_DOUB_NO_HIST, SOLO_ESTADO_NO_HIST, SO_INT_N_HIS, SOLO_HIS, NOR_HIST ,SOLO_TARJ};
-		String[] paramsModelos = { "CHAID_7_300_65_101723", "CHAID_7_300_65_208403", "CHAID_7_300_65_663552", "CHAID_7_300_65_826668", "CHAID_7_300_65_980641" };
+		String[] paramsModelos = { "CHAID_6_400_70_101723", "CHAID_6_400_70_208403", "CHAID_6_400_70_663552", "CHAID_6_400_70_826668", "CHAID_6_400_70_980641" };
 		/** prefixCols debe venir en orden : prefixColProba, prefixColGanancia, prefixColNodo, prefixColTrain */
 		String[] prefixCols = { prefixColProba, prefixColGanancia, prefixColNodo, prefixColTrain };
 		// tipo modelos > modelos > tipo var > var
@@ -486,7 +494,7 @@ public class EstrategiaBMuchosChicos {
 		
 		String carpeta = "C:/Users/julio/Desktop/dmf_wd/ENTREGABLE/modelos_ensemble_20151129_053216/";
 		String odbcName = "dmkd-dmf";
-		String tableName = "ensamble_marzo";
+		String tableName = "ensamble_junio";
 //		renombra las variables
 //		hace el avg de los que terminan igual
 //		renombra las variables
@@ -526,7 +534,7 @@ public class EstrategiaBMuchosChicos {
 		
 		String carpeta = "C:/Users/julio/Desktop/dmf_wd/ENTREGABLE/modelos_ensemble_20151129_053216/";
 		String odbcName = "dmkd-dmf";
-		String tableName = "ensamble_marzo";
+		String tableName = "ensamble_junio";
 		System.out.println(EntregableEstrategiaB.generarPersistenciaEjecucionEnsemble(nombres,prefixCols,odbcName,tableName));
 	}
 	

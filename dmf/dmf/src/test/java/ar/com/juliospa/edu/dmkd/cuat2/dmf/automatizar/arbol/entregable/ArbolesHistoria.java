@@ -3,9 +3,9 @@ package ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.entregable;
 import org.junit.Assert;
 import org.junit.Test;
 
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.UtilidadesGenerales;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.sql.ArbolesSQLEjecutador;
 import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.ArbolFileSources;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.UtilidadesGenerales;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.sql.ArbolesSQLEjecutador;
 
 /**
  * la idea de esto es correr los parametros conocidos con los arboles con todos

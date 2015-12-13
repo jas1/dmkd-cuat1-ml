@@ -4,14 +4,14 @@ import java.io.File;
 
 import org.junit.Test;
 
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioConfig;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioResultado;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.ParseNodosType;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AcumuladorComandosSpss;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulio;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulioExplorandoParametrosBase;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.old.AutomatizarCorridasArbolSinVarParaPaq1;
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.model.NodoResultadoTablaNormalizada;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioConfig;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.AutomatizarCorridasArbolJulioResultado;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.ParseNodosType;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.old.AcumuladorComandosSpss;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulio;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.old.AutomatizarCorridasArbolJulioExplorandoParametrosBase;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.old.AutomatizarCorridasArbolSinVarParaPaq1;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.model.NodoResultadoTablaNormalizada;
 
 /**
  * la idea es probar con el nuevo dataset

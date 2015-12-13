@@ -10,13 +10,13 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import ar.com.juliospa.edu.dmkd.cuat1.dmf.automatizar.arbol.UtilidadesGenerales;
+import ar.com.juliospa.edu.dmkd.cuat2.dmf.automatizar.arbol.UtilidadesGenerales;
 
 public class TestUtils {
 
 	@Test
 	public void analizarResultadosTest() {
-		String path = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/";
+		String path = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/";
 //		String path = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/java-spss-out/sql/default/booleans-sin2048-20151115_124612/";
 		String[] filePaths = AnalizarResultadosUtils.buscarNodos(path).split(";");
 		System.out.println(filePaths.length);
@@ -39,7 +39,9 @@ public class TestUtils {
 					if (line.contains("Valores Nodos")) {
 						flagTodos= true;
 					}
-
+					if (line.contains("Ganancia total Nodos")) {
+						result.add(line);
+					}
 					
 				}
 				mapa.put(string, result);
@@ -82,11 +84,15 @@ public class TestUtils {
 //				System.out.println(lineas);
 //			}
 			for (String lineas :tmp ) {
+				if (lineas.contains("Ganancia total Nodos")) {
+					build.append(lineas).append("\n");	
+				}
 				String[] tmpSplit = lineas.split("\t");
 				if (tmpSplit.length > 12) {
 					if (!tmpSplit[12].equals("vipVariable")) {
 						build.append(tmpSplit[12]).append("\n");	
 					}
+
 				}
 
 				
@@ -96,7 +102,7 @@ public class TestUtils {
 		}
 		
 		String outputPath = "C:/Users/julio/Dropbox/julio_box/educacion/maestria_explotacion_datos_uba/materias/cuat_2_dm_finanzas/entregable/";
-		String outputFile = outputPath+"hojas_arbol.txt";
+		String outputFile = outputPath+"hojas_arbol_v4.txt";
 		UtilidadesGenerales.writeToFile(build.toString(), "UTF-8", outputFile);
 		
 	}
