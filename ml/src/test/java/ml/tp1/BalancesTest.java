@@ -124,12 +124,13 @@ periodo          sum
 		final String TAB = "\t";
 		final String ENTER = "\n";
 		final String ENCODE = "UTF-8";
-		final String path = "C:/dev/R/workingdirs/dmkd_ml_ssn_balances/";
+//		final String path = "C:/dev/R/workingdirs/dmkd_ml_ssn_balances/";
+		final String path = "C:/Users/julio/Desktop/";
 		Table table;
 		Writer writer = null;
 		try {
 
-			table = DatabaseBuilder.open(new File(path + "2015-1.mdb"))
+			table = DatabaseBuilder.open(new File(path + "2015-3.mdb"))
 					.getTable("Balance");
 
 			StringBuilder lBuild = new StringBuilder();
@@ -160,7 +161,7 @@ periodo          sum
 			lBuild.deleteCharAt(lBuild.length() - 1);
 
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(path + "2015-1.txt"), ENCODE));
+					new FileOutputStream(path + "2015-3.txt"), ENCODE));
 			writer.write(lBuild.toString());
 
 		} catch (IOException e) {
